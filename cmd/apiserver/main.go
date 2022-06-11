@@ -43,11 +43,44 @@ func main() {
 	st := postgres.NewStore(db)
 	services := service.NewServices(st)
 	router := handler.NewHandler(services)
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
-
 	srv := server.NewServer(cfg.BindAddr, router.InitRoutes())
+
+	// серверный контекст
+	srvCtx, srvStopCtx := context.WithCancel(context.Background())
+
+	// прослушивание системных вызовов для прерывания или завершения процесса
+	osSigCh := make(chan os.Signal)
+	signal.Notify(osSigCh, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
+	go func() {
+		// как только придёт системный вызов, начинаем процесс завершения приложения
+		<-osSigCh
+		logger.Info("server shutting down gracefully...")
+
+		// контекст для завершения работы сервера с таймаутом в 15 секунд
+		shutdownCtx, shutdownStopCtx := context.WithTimeout(srvCtx, 15*time.Second)
+
+		go func() {
+			<-shutdownCtx.Done()
+			if shutdownCtx.Err() == context.DeadlineExceeded {
+				logger.Fatal("graceful shutdown timed out... forcing exit")
+			}
+		}()
+
+		if err = db.Close(); err != nil {
+			logger.Fatalf("failed to close the database connection: %s", err)
+		}
+
+		// вызов метода завершения работы сервера
+		if err = srv.Shutdown(shutdownCtx); err != nil {
+			logger.Fatalf("server shutdown failed: %s", err)
+		}
+
+		shutdownStopCtx()
+		srvStopCtx()
+	}()
+
+	// запуск сервера
 	go func() {
 		if err = srv.Run(); err != nil && err != http.ErrServerClosed {
 			logger.Fatalf("error occurred while running server: %s", err)
@@ -55,20 +88,8 @@ func main() {
 	}()
 	logger.Infof("server is running at %v", cfg.BindAddr)
 
-	<-quit
-	logger.Info("server shutting down...")
+	// ожидание остановки контекста сервера
+	<-srvCtx.Done()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer func() {
-		if err = db.Close(); err != nil {
-			logger.Fatalf("failed to close the database connection: %s", err)
-		}
-		cancel()
-	}()
-
-	if err = srv.Shutdown(ctx); err != nil {
-		logger.Fatalf("server shutdown failed: %s", err)
-	}
-
-	logger.Info("server exited properly")
+	logger.Info("server exited gracefully")
 }
