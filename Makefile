@@ -7,11 +7,11 @@ tidy:
 
 .PHONY: build
 build: ## сборка бинарника API сервера
-	go build -o server cmd/server/main.go
+	go build -o apiserver cmd/apiserver/main.go
 
 .PHONY: run
 run: build ## запуск API сервера
-	./server
+	./apiserver
 
 .PHONY: migrate-up
 migrate-up: ## применение миграции к БД
@@ -27,3 +27,5 @@ migrate-down: ## откат миграций БД на 1 шаг
 testdata: ## заполнить БД тестовыми данными
 	echo "Filling database with test data..."
 	psql -a -f ./testdata/testdata.sql "$(APP_DSN)"
+
+.DEFAULT_GOAL := run
