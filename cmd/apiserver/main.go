@@ -42,7 +42,7 @@ func main() {
 
 	st := postgres.NewStore(db)
 	services := service.NewServices(st)
-	router := handler.NewHandler(services)
+	router := handler.NewHandler(services, logger)
 	srv := server.NewServer(cfg.BindAddr, router.InitRoutes())
 
 	// серверный контекст
