@@ -1,6 +1,10 @@
 # строка подключения к БД
 APP_DSN ?= postgres://127.0.0.1/aero?sslmode=disable&user=postgres&password=qwerty
 
+.PHONY: tidy
+tidy:
+	go mod tidy
+
 .PHONY: build
 build: ## сборка бинарника API сервера
 	go build -o server cmd/server/main.go
