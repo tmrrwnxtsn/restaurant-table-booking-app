@@ -12,6 +12,8 @@ type RestaurantRepository interface {
 	GetByID(id uint64) (*model.Restaurant, error)
 	// Update обновляет информацию о ресторане по его ID.
 	Update(id uint64, data model.UpdateRestaurantData) error
+	// Delete удаляет запись о ресторане по его ID.
+	Delete(id uint64) error
 }
 
 // TableRepository представляет таблицу с информацией о столиках в ресторанах.

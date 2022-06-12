@@ -110,10 +110,21 @@ func (r *RestaurantRepository) Update(id uint64, data model.UpdateRestaurantData
 	setQuery := strings.Join(setValues, ", ")
 
 	updateRestaurantQuery := fmt.Sprintf("UPDATE %s SET %s WHERE id = $%d",
-		restaurantTable, setQuery, argId)
+		restaurantTable, setQuery, argId,
+	)
 
 	args = append(args, id)
 
 	_, err := r.store.db.Exec(updateRestaurantQuery, args...)
+	return err
+}
+
+func (r *RestaurantRepository) Delete(id uint64) error {
+	deleteRestaurantQuery := fmt.Sprintf(
+		"DELETE FROM %s WHERE id = $1",
+		restaurantTable,
+	)
+
+	_, err := r.store.db.Exec(deleteRestaurantQuery, id)
 	return err
 }

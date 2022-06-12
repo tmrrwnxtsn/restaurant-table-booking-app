@@ -159,3 +159,25 @@ func (h *Handler) updateRestaurant(w http.ResponseWriter, r *http.Request) {
 
 	_ = render.Render(w, r, &UpdateRestaurantResponse{Status: "ok"})
 }
+
+// DeleteRestaurantResponse представляет тело ответа на удаление ресторана.
+type DeleteRestaurantResponse struct {
+	Status string `json:"status"`
+}
+
+// Render осуществляет предобработку ответа DeleteRestaurantResponse.
+func (r *DeleteRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+	return nil
+}
+
+// deleteRestaurant на удаление ресторана.
+func (h *Handler) deleteRestaurant(w http.ResponseWriter, r *http.Request) {
+	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
+
+	if err := h.service.RestaurantService.Delete(restaurant.ID); err != nil {
+		_ = render.Render(w, r, ErrServiceFailure(err))
+		return
+	}
+
+	_ = render.Render(w, r, &DeleteRestaurantResponse{Status: "ok"})
+}

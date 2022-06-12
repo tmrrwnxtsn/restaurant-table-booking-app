@@ -15,6 +15,8 @@ type RestaurantService interface {
 	GetByID(id uint64) (*model.Restaurant, error)
 	// Update обновляет информацию о ресторане по его ID.
 	Update(id uint64, data model.UpdateRestaurantData) error
+	// Delete удаляет ресторан по его ID.
+	Delete(id uint64) error
 }
 
 type RestaurantServiceImpl struct {
@@ -39,4 +41,8 @@ func (r *RestaurantServiceImpl) GetByID(id uint64) (*model.Restaurant, error) {
 
 func (r *RestaurantServiceImpl) Update(id uint64, data model.UpdateRestaurantData) error {
 	return r.restaurantRepo.Update(id, data)
+}
+
+func (r *RestaurantServiceImpl) Delete(id uint64) error {
+	return r.restaurantRepo.Delete(id)
 }
