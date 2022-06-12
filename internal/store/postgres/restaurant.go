@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/model"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/store"
@@ -36,12 +37,12 @@ func (r *RestaurantRepository) Create(name string, averageWaitingTime int, avera
 }
 
 func (r *RestaurantRepository) GetAll() ([]model.Restaurant, error) {
-	listRestaurantsQuery := fmt.Sprintf(
+	getAllRestaurantsQuery := fmt.Sprintf(
 		"SELECT * FROM %s ORDER BY average_waiting_time, average_check",
 		restaurantTable,
 	)
 
-	rows, err := r.store.db.Query(listRestaurantsQuery)
+	rows, err := r.store.db.Query(getAllRestaurantsQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -62,4 +63,22 @@ func (r *RestaurantRepository) GetAll() ([]model.Restaurant, error) {
 		return restaurants, err
 	}
 	return restaurants, nil
+}
+
+func (r *RestaurantRepository) GetByID(id uint64) (*model.Restaurant, error) {
+	getRestaurantByIDQuery := fmt.Sprintf(
+		"SELECT * FROM %s WHERE id = $1",
+		restaurantTable,
+	)
+
+	restaurant := &model.Restaurant{}
+	if err := r.store.db.QueryRow(
+		getRestaurantByIDQuery, id,
+	).Scan(&restaurant.ID, &restaurant.Name, &restaurant.AverageWaitingTime, &restaurant.AverageCheck); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, store.ErrRestaurantNotFound
+		}
+		return nil, err
+	}
+	return restaurant, nil
 }

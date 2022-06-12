@@ -11,6 +11,8 @@ type RestaurantService interface {
 	Create(name string, averageWaitingTime int, averageCheck float64) (uint64, error)
 	// GetAll получает список всех ресторанов.
 	GetAll() ([]model.Restaurant, error)
+	// GetByID получает ресторан по его ID.
+	GetByID(id uint64) (*model.Restaurant, error)
 }
 
 type RestaurantServiceImpl struct {
@@ -27,4 +29,8 @@ func (r *RestaurantServiceImpl) Create(name string, averageWaitingTime int, aver
 
 func (r *RestaurantServiceImpl) GetAll() ([]model.Restaurant, error) {
 	return r.restaurantRepo.GetAll()
+}
+
+func (r *RestaurantServiceImpl) GetByID(id uint64) (*model.Restaurant, error) {
+	return r.restaurantRepo.GetByID(id)
 }

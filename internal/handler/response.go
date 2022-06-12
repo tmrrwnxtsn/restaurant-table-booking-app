@@ -28,6 +28,15 @@ func ErrInvalidRequest(err error) render.Renderer {
 	}
 }
 
+func ErrNotFound(err error) render.Renderer {
+	return &ErrResponse{
+		Err:            err,
+		HTTPStatusCode: 404,
+		StatusText:     "resource not found",
+		ErrorText:      err.Error(),
+	}
+}
+
 func ErrServiceFailure(err error) render.Renderer {
 	return &ErrResponse{
 		Err:            err,

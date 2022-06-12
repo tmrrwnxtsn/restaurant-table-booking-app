@@ -8,6 +8,8 @@ type RestaurantRepository interface {
 	Create(name string, averageWaitingTime int, averageCheck float64) (uint64, error)
 	// GetAll возвращает список всех ресторанов.
 	GetAll() ([]model.Restaurant, error)
+	// GetByID возвращает ресторан по его ID.
+	GetByID(id uint64) (*model.Restaurant, error)
 }
 
 // TableRepository представляет таблицу с информацией о столиках в ресторанах.

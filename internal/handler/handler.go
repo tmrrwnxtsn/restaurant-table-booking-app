@@ -45,12 +45,12 @@ func (h *Handler) InitRoutes() *chi.Mux {
 			r.Get("/", h.listRestaurants)   // GET /api/v1/restaurants
 			r.Post("/", h.createRestaurant) // POST /api/v1/restaurants
 
-			//r.Route("/{restaurantID}", func(r chi.Router) {
-			//	r.Use(ArticleCtx)            // Load the *Article on the request context
-			//	r.Get("/", GetArticle)       // GET /restaurants/123
-			//	r.Put("/", UpdateArticle)    // PUT /restaurants/123
-			//	r.Delete("/", DeleteArticle) // DELETE /restaurants/123
-			//})
+			r.Route("/{restaurant_id}", func(r chi.Router) {
+				r.Use(h.restaurantCtx)      // загрузить *model.Restaurant из контекста запроса
+				r.Get("/", h.getRestaurant) // GET /api/v1/restaurants/123
+				//r.Put("/", UpdateArticle)    // PUT /api/v1/restaurants/123
+				//r.Delete("/", DeleteArticle) // DELETE /api/v1/restaurants/123
+			})
 		})
 	})
 
