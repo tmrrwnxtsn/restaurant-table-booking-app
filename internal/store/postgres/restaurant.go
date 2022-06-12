@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/model"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/store"
+	"strings"
 )
 
 const restaurantTable = "restaurants"
@@ -81,4 +82,38 @@ func (r *RestaurantRepository) GetByID(id uint64) (*model.Restaurant, error) {
 		return nil, err
 	}
 	return restaurant, nil
+}
+
+func (r *RestaurantRepository) Update(id uint64, data model.UpdateRestaurantData) error {
+	setValues := make([]string, 0, 3)
+	args := make([]interface{}, 0, 3)
+	argId := 1
+
+	if data.Name != nil {
+		setValues = append(setValues, fmt.Sprintf("name=$%d", argId))
+		args = append(args, *data.Name)
+		argId++
+	}
+
+	if data.AverageWaitingTime != nil {
+		setValues = append(setValues, fmt.Sprintf("average_waiting_time=$%d", argId))
+		args = append(args, *data.AverageWaitingTime)
+		argId++
+	}
+
+	if data.AverageCheck != nil {
+		setValues = append(setValues, fmt.Sprintf("average_check=$%d", argId))
+		args = append(args, *data.AverageCheck)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+
+	updateRestaurantQuery := fmt.Sprintf("UPDATE %s SET %s WHERE id = $%d",
+		restaurantTable, setQuery, argId)
+
+	args = append(args, id)
+
+	_, err := r.store.db.Exec(updateRestaurantQuery, args...)
+	return err
 }

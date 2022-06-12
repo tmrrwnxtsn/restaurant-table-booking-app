@@ -11,14 +11,7 @@ import (
 	"strconv"
 )
 
-const (
-	limitValueKey  = "limit"
-	offsetValueKey = "offset"
-)
-
-const (
-	restaurantCtxKey = "restaurant"
-)
+const restaurantCtxKey = "restaurant"
 
 // ListRestaurantsResponse представляет тело ответа на получение списка всех ресторанов.
 type ListRestaurantsResponse struct {
@@ -41,31 +34,6 @@ func (h *Handler) listRestaurants(w http.ResponseWriter, r *http.Request) {
 	render.Status(r, http.StatusOK)
 	_ = render.Render(w, r, &ListRestaurantsResponse{
 		Data: restaurants,
-	})
-}
-
-// paginate является middleware-компонентом для парсинга параметров (limit, offset) запроса к listRestaurants.
-func (h *Handler) paginate(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var limit, offset uint64 = 5, 0
-
-		if limitStr := chi.URLParam(r, limitValueKey); limitStr != "" {
-			parseUint, err := strconv.ParseUint(limitStr, 10, 0)
-			if err == nil {
-				limit = parseUint
-			}
-		}
-
-		if offsetStr := chi.URLParam(r, offsetValueKey); offsetStr != "" {
-			parseUint, err := strconv.ParseUint(offsetStr, 10, 0)
-			if err != nil {
-				offset = parseUint
-			}
-		}
-
-		ctx := context.WithValue(r.Context(), limitValueKey, limit)
-		ctx = context.WithValue(ctx, offsetValueKey, offset)
-		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
@@ -162,4 +130,32 @@ func (h *Handler) getRestaurant(w http.ResponseWriter, r *http.Request) {
 		_ = render.Render(w, r, ErrRender(err))
 		return
 	}
+}
+
+// UpdateRestaurantResponse представляет тело ответа на получение ресторана.
+type UpdateRestaurantResponse struct {
+	Status string `json:"status"`
+}
+
+// Render осуществляет предобработку ответа UpdateRestaurantResponse.
+func (r *UpdateRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+	return nil
+}
+
+// updateRestaurant принимает запросы на обновление информации о ресторане.
+func (h *Handler) updateRestaurant(w http.ResponseWriter, r *http.Request) {
+	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
+
+	data := model.UpdateRestaurantData{}
+	if err := render.Bind(r, &data); err != nil {
+		_ = render.Render(w, r, ErrInvalidRequest(err))
+		return
+	}
+
+	if err := h.service.RestaurantService.Update(restaurant.ID, data); err != nil {
+		_ = render.Render(w, r, ErrServiceFailure(err))
+		return
+	}
+
+	_ = render.Render(w, r, &UpdateRestaurantResponse{Status: "ok"})
 }

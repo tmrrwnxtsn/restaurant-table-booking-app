@@ -46,9 +46,9 @@ func (h *Handler) InitRoutes() *chi.Mux {
 			r.Post("/", h.createRestaurant) // POST /api/v1/restaurants
 
 			r.Route("/{restaurant_id}", func(r chi.Router) {
-				r.Use(h.restaurantCtx)      // загрузить *model.Restaurant из контекста запроса
-				r.Get("/", h.getRestaurant) // GET /api/v1/restaurants/123
-				//r.Put("/", UpdateArticle)    // PUT /api/v1/restaurants/123
+				r.Use(h.restaurantCtx)           // загрузить *model.Restaurant из контекста запроса
+				r.Get("/", h.getRestaurant)      // GET /api/v1/restaurants/123
+				r.Patch("/", h.updateRestaurant) // PATCH /api/v1/restaurants/123
 				//r.Delete("/", DeleteArticle) // DELETE /api/v1/restaurants/123
 			})
 		})

@@ -10,6 +10,8 @@ type RestaurantRepository interface {
 	GetAll() ([]model.Restaurant, error)
 	// GetByID возвращает ресторан по его ID.
 	GetByID(id uint64) (*model.Restaurant, error)
+	// Update обновляет информацию о ресторане по его ID.
+	Update(id uint64, data model.UpdateRestaurantData) error
 }
 
 // TableRepository представляет таблицу с информацией о столиках в ресторанах.

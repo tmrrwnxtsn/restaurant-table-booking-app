@@ -13,6 +13,8 @@ type RestaurantService interface {
 	GetAll() ([]model.Restaurant, error)
 	// GetByID получает ресторан по его ID.
 	GetByID(id uint64) (*model.Restaurant, error)
+	// Update обновляет информацию о ресторане по его ID.
+	Update(id uint64, data model.UpdateRestaurantData) error
 }
 
 type RestaurantServiceImpl struct {
@@ -33,4 +35,8 @@ func (r *RestaurantServiceImpl) GetAll() ([]model.Restaurant, error) {
 
 func (r *RestaurantServiceImpl) GetByID(id uint64) (*model.Restaurant, error) {
 	return r.restaurantRepo.GetByID(id)
+}
+
+func (r *RestaurantServiceImpl) Update(id uint64, data model.UpdateRestaurantData) error {
+	return r.restaurantRepo.Update(id, data)
 }
