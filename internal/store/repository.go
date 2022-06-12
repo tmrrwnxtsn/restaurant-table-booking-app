@@ -1,7 +1,13 @@
 package store
 
+import "github.com/tmrrwnxtsn/aero-table-booking-api/internal/model"
+
 // RestaurantRepository представляет таблицу с информацией о ресторанах.
 type RestaurantRepository interface {
+	// Create создаёт новую запись о ресторане.
+	Create(name string, averageWaitingTime int, averageCheck float64) (uint64, error)
+	// GetAll возвращает список всех ресторанов.
+	GetAll() ([]model.Restaurant, error)
 }
 
 // TableRepository представляет таблицу с информацией о столиках в ресторанах.

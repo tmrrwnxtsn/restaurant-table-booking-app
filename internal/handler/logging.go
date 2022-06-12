@@ -52,7 +52,7 @@ func (l *StructuredLoggerEntry) Write(status, _ int, _ http.Header, elapsed time
 		"elapsed_ms": float64(elapsed.Nanoseconds()) / 1000000.0,
 	})
 
-	l.Logger.Infoln("request complete")
+	l.Logger.Info("request complete")
 }
 
 func (l *StructuredLoggerEntry) Panic(v interface{}, stack []byte) {

@@ -1,3 +1,5 @@
+SET client_encoding TO 'utf8';
+
 -- Изначально есть 3 ресторана
 INSERT INTO restaurants (name, average_waiting_time, average_check)
 VALUES ('Каравелла', 30, 2000.00),

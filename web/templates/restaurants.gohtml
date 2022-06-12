@@ -1,0 +1,21 @@
+{{define "restaurants"}}
+    <!DOCTYPE html>
+    <html lang="ru">
+    {{template "metadata" .Metadata}}
+    <body>
+    <section class="py-1 text-center container">
+        <div class="row py-lg-3">
+            <div class="col-lg-7 col-md-7 mx-auto">
+                <h1 class="fw-normal">Выбор ресторана</h1>
+            </div>
+        </div>
+    </section>
+    {{template "restaurants-content" .Restaurants}}
+    <section class="py-3 text-center container">
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a class="btn btn-primary" type="button" href="/">Назад</a>
+        </div>
+    </section>
+    </body>
+    </html>
+{{end}}
