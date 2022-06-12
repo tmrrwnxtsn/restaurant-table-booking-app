@@ -1,0 +1,3 @@
+bind_addr: ":8080"
+dsn: "postgres://127.0.0.1/aero?sslmode=disable&user=postgres&password=qwerty"
+log_level: "info"
