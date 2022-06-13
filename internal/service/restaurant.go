@@ -60,6 +60,13 @@ func (r *RestaurantServiceImpl) GetAllAvailable(desiredDateTime, peopleNumber st
 		return nil, fmt.Errorf("%w: the date and time of booking cannot be in the past", ErrInvalidData)
 	}
 
+	// рестораны работают с 9:00 до 23:00 (последнюю бронь можно создать на 21:00)
+	dateTimeHour := dateTime.Hour()
+	dateTimeMinute := dateTime.Minute()
+	if dateTimeHour < 9 || dateTimeHour >= 22 || dateTimeHour == 21 && dateTimeMinute > 0 {
+		return nil, fmt.Errorf("%w: the restaurant is closed", ErrInvalidData)
+	}
+
 	desiredDate := dateTime.Format("2006.01.02")
 	desiredTime := dateTime.Format("15:04")
 
