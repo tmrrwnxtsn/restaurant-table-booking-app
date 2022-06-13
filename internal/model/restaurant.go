@@ -10,6 +10,8 @@ type Restaurant struct {
 	AverageWaitingTime int `json:"average_waiting_time"`
 	// AverageCheck представляет средний чек на блюдо в ресторане.
 	AverageCheck float64 `json:"average_check"`
+	// AvailableSeatsNumber представляет актуальное количество свободных мест.
+	AvailableSeatsNumber int `json:"available_seats_number,omitempty"`
 }
 
 // UpdateRestaurantData содержит информацию о ресторане и используется для обновления записи о нём в БД.

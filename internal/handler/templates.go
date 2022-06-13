@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"errors"
 	"github.com/go-chi/render"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/model"
+	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/service"
 	"html/template"
 	"net/http"
 )
@@ -15,13 +17,17 @@ func init() {
 	tmpls = template.Must(template.ParseGlob(templatesPattern))
 }
 
+// SiteDetails представляет данные, которые помещаются в шаблоны для отображения в визуальном интерфейсе.
 type SiteDetails struct {
-	Metadata    Metadata
+	Title       string
 	Restaurants []model.Restaurant
 }
 
-type Metadata struct {
-	Title string
+// ErrorDetails представляет данные, которые помещаются в шаблон, который оповещает о произошедшей ошибке.
+type ErrorDetails struct {
+	Title      string
+	StatusCode int
+	Text       string
 }
 
 // home отображает содержание стартовой страницы.
@@ -29,27 +35,50 @@ func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r,
 		"index",
 		&SiteDetails{
-			Metadata: Metadata{
-				Title: "Бронирование столиков в ресторанах",
-			},
+			Title: "Бронирование столиков в ресторанах",
 		},
 	)
 }
 
-// restaurants отображает содержание страницы с выбором ресторанов.
+// restaurants отображает содержание страницы с выбором ресторанов в зависимости от желаемых даты, времени и
+// количества человек, на которых в ресторане бронируются столики.
 func (h *Handler) restaurants(w http.ResponseWriter, r *http.Request) {
-	restaurants, err := h.service.RestaurantService.GetAll()
+	desiredDateTime := r.URL.Query().Get("desired_datetime")
+	peopleNumber := r.URL.Query().Get("people_number")
+
+	if desiredDateTime == "" || peopleNumber == "" {
+		renderTemplate(w, r,
+			"error",
+			&ErrorDetails{
+				Title:      "Произошла ошибка",
+				Text:       ErrFindAvailableRestaurants.Error(),
+				StatusCode: http.StatusBadRequest,
+			},
+		)
+		return
+	}
+
+	restaurants, err := h.service.RestaurantService.GetAllAvailable(desiredDateTime, peopleNumber)
 	if err != nil {
-		_ = render.Render(w, r, ErrServiceFailure(err))
+		statusCode := http.StatusInternalServerError
+		if errors.Is(err, service.ErrInvalidData) {
+			statusCode = http.StatusBadRequest
+		}
+		renderTemplate(w, r,
+			"error",
+			&ErrorDetails{
+				Title:      "Произошла ошибка",
+				Text:       err.Error(),
+				StatusCode: statusCode,
+			},
+		)
 		return
 	}
 
 	renderTemplate(w, r,
 		"restaurants",
 		&SiteDetails{
-			Metadata: Metadata{
-				Title: "Выбор ресторана",
-			},
+			Title:       "Выбор ресторана",
 			Restaurants: restaurants,
 		},
 	)

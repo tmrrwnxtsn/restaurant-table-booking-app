@@ -66,6 +66,40 @@ func (r *RestaurantRepository) GetAll() ([]model.Restaurant, error) {
 	return restaurants, nil
 }
 
+func (r *RestaurantRepository) GetAllAvailable(desiredDate, desiredTime string, peopleNumber int) ([]model.Restaurant, error) {
+	getAllAvailableRestaurantsQuery := fmt.Sprintf(
+		`SELECT r.id, r.name, r.average_waiting_time, r.average_check, SUM(t.seats_number) as available_seats_number
+				FROM get_available_tables(date '%s', time '%s') t
+				JOIN %s r ON r.id = t.restaurant_id
+				GROUP BY r.id, r.name, r.average_waiting_time, r.average_check
+				HAVING SUM(t.seats_number) > $1
+				ORDER BY r.average_waiting_time, r.average_check`,
+		desiredDate, desiredTime, restaurantTable,
+	)
+
+	rows, err := r.store.db.Query(getAllAvailableRestaurantsQuery, peopleNumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var restaurants []model.Restaurant
+
+	for rows.Next() {
+		var restaurant model.Restaurant
+		if err = rows.Scan(
+			&restaurant.ID, &restaurant.Name, &restaurant.AverageWaitingTime, &restaurant.AverageCheck, &restaurant.AvailableSeatsNumber,
+		); err != nil {
+			return restaurants, err
+		}
+		restaurants = append(restaurants, restaurant)
+	}
+	if err = rows.Err(); err != nil {
+		return restaurants, err
+	}
+	return restaurants, nil
+}
+
 func (r *RestaurantRepository) GetByID(id uint64) (*model.Restaurant, error) {
 	getRestaurantByIDQuery := fmt.Sprintf(
 		"SELECT * FROM %s WHERE id = $1",

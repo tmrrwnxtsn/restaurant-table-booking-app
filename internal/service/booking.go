@@ -10,6 +10,6 @@ type BookingServiceImpl struct {
 	bookingRepo store.BookingRepository
 }
 
-func NewBookingService(bookingRepo store.BookingRepository) BookingService {
+func NewBookingService(bookingRepo store.BookingRepository) *BookingServiceImpl {
 	return &BookingServiceImpl{bookingRepo: bookingRepo}
 }

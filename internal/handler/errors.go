@@ -6,10 +6,13 @@ import (
 	"net/http"
 )
 
-// ошибки, возникающие при работе с маршрутами манипуляции с ресторанами.
+// Ошибки, возникающие при работе с маршрутами манипуляции с ресторанами.
 var (
 	// ErrRestaurantMissingFields возникает, когда в запросе на создание ресторана пропущены обязательные поля.
 	ErrRestaurantMissingFields = errors.New("missing required restaurant fields")
+	// ErrFindAvailableRestaurants возникает, когда в запросе на поиск доступных ресторанов пропущено либо кол-во человек,
+	// либо дата и время.
+	ErrFindAvailableRestaurants = errors.New("missing required datetime or people number")
 )
 
 // ErrResponse представляет ответ-ошибку.
@@ -33,7 +36,7 @@ func (e *ErrResponse) Render(_ http.ResponseWriter, r *http.Request) error {
 func ErrInvalidRequest(err error) render.Renderer {
 	return &ErrResponse{
 		Err:            err,
-		HTTPStatusCode: 400,
+		HTTPStatusCode: http.StatusBadRequest,
 		StatusText:     "invalid request",
 		ErrorText:      err.Error(),
 	}
@@ -44,7 +47,7 @@ func ErrInvalidRequest(err error) render.Renderer {
 func ErrNotFound(err error) render.Renderer {
 	return &ErrResponse{
 		Err:            err,
-		HTTPStatusCode: 404,
+		HTTPStatusCode: http.StatusNotFound,
 		StatusText:     "resource not found",
 		ErrorText:      err.Error(),
 	}
@@ -55,7 +58,7 @@ func ErrNotFound(err error) render.Renderer {
 func ErrRender(err error) render.Renderer {
 	return &ErrResponse{
 		Err:            err,
-		HTTPStatusCode: 422,
+		HTTPStatusCode: http.StatusUnprocessableEntity,
 		StatusText:     "error rendering response",
 		ErrorText:      err.Error(),
 	}
@@ -66,7 +69,7 @@ func ErrRender(err error) render.Renderer {
 func ErrServiceFailure(err error) render.Renderer {
 	return &ErrResponse{
 		Err:            err,
-		HTTPStatusCode: 500,
+		HTTPStatusCode: http.StatusInternalServerError,
 		StatusText:     "service failure",
 		ErrorText:      err.Error(),
 	}

@@ -1,7 +1,7 @@
 {{define "index"}}
     <!DOCTYPE html>
     <html lang="ru">
-    {{template "metadata" .Metadata}}
+    {{template "metadata" .}}
     <body>
     <section class="py-1 text-center container">
         <div class="row py-lg-3">
@@ -19,9 +19,9 @@
                                    required>
                         </div>
                         <div class="col-sm-6">
-                            <label for="booking_datetime" class="form-label">Желаемое время посещения ресторана</label>
-                            <input type="datetime-local" name="booking_datetime" class="form-control" value="now"
-                                   id="booking_datetime"
+                            <label for="desired_datetime" class="form-label">Желаемое время посещения ресторана</label>
+                            <input type="datetime-local" name="desired_datetime" class="form-control" value="now"
+                                   id="desired_datetime"
                                    required>
                         </div>
                     </div>

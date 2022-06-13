@@ -10,6 +10,6 @@ type TableServiceImpl struct {
 	tableRepo store.TableRepository
 }
 
-func NewTableService(tableRepo store.TableRepository) TableService {
+func NewTableService(tableRepo store.TableRepository) *TableServiceImpl {
 	return &TableServiceImpl{tableRepo: tableRepo}
 }

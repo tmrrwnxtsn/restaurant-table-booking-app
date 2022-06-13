@@ -1,7 +1,7 @@
 {{define "restaurants"}}
     <!DOCTYPE html>
     <html lang="ru">
-    {{template "metadata" .Metadata}}
+    {{template "metadata" .}}
     <body>
     <section class="py-1 text-center container">
         <div class="row py-lg-3">
@@ -10,12 +10,27 @@
             </div>
         </div>
     </section>
-    {{template "restaurants-content" .Restaurants}}
-    <section class="py-3 text-center container">
-        <div class="d-grid gap-2 col-6 mx-auto">
-            <a class="btn btn-primary" type="button" href="/">Назад</a>
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {{range .Restaurants}}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{.Name}}</h5>
+                                <p class="card-text">Среднее время ожидания блюда: {{.AverageWaitingTime}}
+                                    мин.</p>
+                                <p class="card-text mt-3">Средний чек: {{.AverageCheck}} руб.</p>
+                                <p class="card-text">Количество свободных
+                                    мест: {{.AvailableSeatsNumber}}</p>
+                            </div>
+                        </div>
+                    </div>
+                {{end}}
+            </div>
         </div>
-    </section>
+    </div>
+    {{template "back-to-index"}}
     </body>
     </html>
 {{end}}

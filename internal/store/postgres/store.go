@@ -15,7 +15,7 @@ type Store struct {
 	bookingRepo    store.BookingRepository
 }
 
-func NewStore(db *sql.DB) store.Store {
+func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 

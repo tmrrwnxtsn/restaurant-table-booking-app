@@ -10,6 +10,6 @@ type ClientServiceImpl struct {
 	clientRepo store.ClientRepository
 }
 
-func NewClientService(clientRepo store.ClientRepository) ClientService {
+func NewClientService(clientRepo store.ClientRepository) *ClientServiceImpl {
 	return &ClientServiceImpl{clientRepo: clientRepo}
 }
