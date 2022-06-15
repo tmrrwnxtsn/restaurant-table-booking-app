@@ -14,21 +14,14 @@ CREATE TABLE IF NOT EXISTS tables
     CONSTRAINT fk_tables_restaurants FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS clients
-(
-    id    SERIAL PRIMARY KEY,
-    name  VARCHAR(255) NOT NULL,
-    phone VARCHAR(11)  NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS bookings
 (
     id               SERIAL PRIMARY KEY,
-    client_id        INTEGER NOT NULL,
-    booked_date      DATE    NOT NULL,
-    booked_time_from TIME    NOT NULL,
-    booked_time_to   TIME    NOT NULL,
-    CONSTRAINT fk_bookings_clients FOREIGN KEY (client_id) REFERENCES clients (id)
+    client_name      VARCHAR(255) NOT NULL,
+    client_phone     VARCHAR(11)  NOT NULL,
+    booked_date      DATE         NOT NULL,
+    booked_time_from TIME         NOT NULL,
+    booked_time_to   TIME         NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS bookings_tables

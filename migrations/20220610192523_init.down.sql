@@ -6,8 +6,6 @@ DROP TABLE IF EXISTS bookings_tables;
 
 DROP TABLE IF EXISTS bookings;
 
-DROP TABLE IF EXISTS clients;
-
 DROP TABLE IF EXISTS tables;
 
 DROP TABLE IF EXISTS restaurants;

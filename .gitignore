@@ -19,6 +19,3 @@
 
 # Environment variables
 *.env
-
-# Binary
-apiserver
