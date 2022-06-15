@@ -24,6 +24,7 @@ type RestaurantService interface {
 	Delete(id uint64) error
 }
 
+// RestaurantServiceImpl представляет реализацю RestaurantService.
 type RestaurantServiceImpl struct {
 	restaurantRepo store.RestaurantRepository
 }
@@ -32,15 +33,15 @@ func NewRestaurantService(restaurantRepo store.RestaurantRepository) *Restaurant
 	return &RestaurantServiceImpl{restaurantRepo: restaurantRepo}
 }
 
-func (r *RestaurantServiceImpl) Create(name string, averageWaitingTime int, averageCheck float64) (uint64, error) {
-	return r.restaurantRepo.Create(name, averageWaitingTime, averageCheck)
+func (s *RestaurantServiceImpl) Create(name string, averageWaitingTime int, averageCheck float64) (uint64, error) {
+	return s.restaurantRepo.Create(name, averageWaitingTime, averageCheck)
 }
 
-func (r *RestaurantServiceImpl) GetAll() ([]model.Restaurant, error) {
-	return r.restaurantRepo.GetAll()
+func (s *RestaurantServiceImpl) GetAll() ([]model.Restaurant, error) {
+	return s.restaurantRepo.GetAll()
 }
 
-func (r *RestaurantServiceImpl) GetAllAvailable(desiredDateTime, peopleNumber string) ([]model.Restaurant, error) {
+func (s *RestaurantServiceImpl) GetAllAvailable(desiredDateTime, peopleNumber string) ([]model.Restaurant, error) {
 	peopleNum, err := strconv.Atoi(peopleNumber)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrInvalidData, err.Error())
@@ -70,17 +71,17 @@ func (r *RestaurantServiceImpl) GetAllAvailable(desiredDateTime, peopleNumber st
 	desiredDate := dateTime.Format("2006.01.02")
 	desiredTime := dateTime.Format("15:04")
 
-	return r.restaurantRepo.GetAllAvailable(desiredDate, desiredTime, peopleNum)
+	return s.restaurantRepo.GetAllAvailable(desiredDate, desiredTime, peopleNum)
 }
 
-func (r *RestaurantServiceImpl) GetByID(id uint64) (*model.Restaurant, error) {
-	return r.restaurantRepo.GetByID(id)
+func (s *RestaurantServiceImpl) GetByID(id uint64) (*model.Restaurant, error) {
+	return s.restaurantRepo.GetByID(id)
 }
 
-func (r *RestaurantServiceImpl) Update(id uint64, data model.UpdateRestaurantData) error {
-	return r.restaurantRepo.Update(id, data)
+func (s *RestaurantServiceImpl) Update(id uint64, data model.UpdateRestaurantData) error {
+	return s.restaurantRepo.Update(id, data)
 }
 
-func (r *RestaurantServiceImpl) Delete(id uint64) error {
-	return r.restaurantRepo.Delete(id)
+func (s *RestaurantServiceImpl) Delete(id uint64) error {
+	return s.restaurantRepo.Delete(id)
 }

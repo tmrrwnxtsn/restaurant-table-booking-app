@@ -2,6 +2,7 @@ package store
 
 import (
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
+	"time"
 )
 
 // RestaurantRepository представляет таблицу с информацией о ресторанах.
@@ -23,8 +24,13 @@ type RestaurantRepository interface {
 
 // TableRepository представляет таблицу с информацией о столиках в ресторанах.
 type TableRepository interface {
+	// GetAllAvailableByRestaurant возвращает список всех столиков, доступных для бронирования, в конкретном ресторане.
+	// Принимает desiredDate в формате "2006.01.02" и desiredTime - "15:04".
+	GetAllAvailableByRestaurant(restaurantID uint64, desiredDate, desiredTime string) ([]model.Table, error)
 }
 
 // BookingRepository представляет таблицу с информацией о совершённых клиентами бронях.
 type BookingRepository interface {
+	// Create создаёт новую запись о брони и связывает созданную бронь со столиками, которые бронируются в рамках неё.
+	Create(clientName, clientPhone string, bookedDate, bookedTimeFrom time.Time, tableIDs ...uint64) (uint64, error)
 }

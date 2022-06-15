@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"fmt"
 	"github.com/go-chi/render"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/service"
@@ -22,6 +21,8 @@ func init() {
 type TemplatesContext struct {
 	PageTitle   string
 	Restaurants []model.Restaurant
+	BookingID   uint64
+
 	ErrorCode int
 	ErrorText string
 }
@@ -75,14 +76,6 @@ func (h *Handler) restaurants(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-// BookingDetails представляет данные, которые приходят из формы оформления брони.
-type BookingDetails struct {
-	PeopleNumber    string
-	DesiredDatetime string
-	ClientName      string
-	ClientPhone     string
-}
-
 // makeBooking обрабатывает запрос на создание брони в выбранном ресторане.
 func (h *Handler) makeBooking(w http.ResponseWriter, r *http.Request) {
 	headerContentType := r.Header.Get("Content-Type")
@@ -97,17 +90,38 @@ func (h *Handler) makeBooking(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	details := &BookingDetails{
+	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
+
+	details := model.BookingDetails{
+		RestaurantID:    restaurant.ID,
 		PeopleNumber:    r.FormValue("people_number"),
 		DesiredDatetime: r.FormValue("desired_datetime"),
 		ClientName:      r.FormValue("client_name"),
 		ClientPhone:     r.FormValue("client_phone"),
 	}
 
-	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
+	bookingID, err := h.service.BookingService.Create(details)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		if errors.Is(err, service.ErrInvalidData) {
+			statusCode = http.StatusBadRequest
+		}
+		renderTemplate(w, r, "error",
+			&TemplatesContext{
+				PageTitle: "Произошла ошибка",
+				ErrorText: err.Error(),
+				ErrorCode: statusCode,
+			},
+		)
+		return
+	}
 
-	fmt.Println(restaurant)
-	fmt.Println(details)
+	renderTemplate(w, r, "booking-created",
+		&TemplatesContext{
+			PageTitle: "Бронь успешно оформлена",
+			BookingID: bookingID,
+		},
+	)
 }
 
 // renderTemplate обрабатывает шаблон страницы с переданными в него данными.

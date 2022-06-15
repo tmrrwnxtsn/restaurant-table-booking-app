@@ -14,7 +14,7 @@ type Services struct {
 
 func NewServices(store store.Store) *Services {
 	return &Services{
-		BookingService:    NewBookingService(store.Bookings()),
+		BookingService:    NewBookingService(store.Bookings(), store.Tables()),
 		RestaurantService: NewRestaurantService(store.Restaurants()),
 		TableService:      NewTableService(store.Tables()),
 	}
