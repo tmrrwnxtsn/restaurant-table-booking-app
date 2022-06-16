@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // Booking представляет бронь.
 type Booking struct {
@@ -10,11 +13,27 @@ type Booking struct {
 	// ClientPhone представляет телефон клиента, оформляющего бронь.
 	ClientPhone string `json:"client_phone"`
 	// BookedDate представляет дату посещения ресторана в рамках брони.
-	BookedDate time.Time `json:"booked_date"`
+	BookedDate ShortFormattedDate `json:"booked_date"`
 	// BookedTimeFrom представляет время начала брони.
-	BookedTimeFrom time.Time `json:"booked_time_from"`
+	BookedTimeFrom ShortFormattedTime `json:"booked_time_from"`
 	// BookedTimeTo представляет время конца брони.
-	BookedTimeTo time.Time `json:"booked_time_to"`
+	BookedTimeTo ShortFormattedTime `json:"booked_time_to"`
+}
+
+// ShortFormattedTime представляет время в формате "15:04".
+type ShortFormattedTime time.Time
+
+func (t ShortFormattedTime) MarshalJSON() ([]byte, error) {
+	stamp := fmt.Sprintf("\"%s\"", time.Time(t).Format("15:04"))
+	return []byte(stamp), nil
+}
+
+// ShortFormattedDate представляет дату в формате "2006.01.02".
+type ShortFormattedDate time.Time
+
+func (t ShortFormattedDate) MarshalJSON() ([]byte, error) {
+	stamp := fmt.Sprintf("\"%s\"", time.Time(t).Format("2006.01.02"))
+	return []byte(stamp), nil
 }
 
 // BookingsTables представляет таблицу в БД, в которой хранятся столики и брони, к которым они относятся.
@@ -30,7 +49,7 @@ type BookingDetails struct {
 	RestaurantID uint64
 	// PeopleNumber представляет количество человек, собирающихся посетит ресторан по брони.
 	PeopleNumber string
-	// DesiredDatetime представляет дату и время посещения ресторана в рамках брони (строка вида "16.06.2022 17:03")
+	// DesiredDatetime представляет дату и время посещения ресторана в рамках брони (строка вида "2022.06.16 17:03")
 	DesiredDatetime string
 	// ClientName имя клиента, оформляющего бронь.
 	ClientName string

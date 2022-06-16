@@ -13,6 +13,18 @@ import (
 
 const tableCtxKey = "table"
 
+// initTablesRouter подготавливает отдельный маршрутизатор для манипуляции столиками в ресторанах.
+func (h *Handler) initTablesRouter() chi.Router {
+	r := chi.NewRouter()
+	r.Route("/{table_id}", func(r chi.Router) {
+		r.Use(h.tableCtx)            // загрузить информацию о столике из контекста запроса
+		r.Get("/", h.getTable)       // GET /tables/123/
+		r.Patch("/", h.updateTable)  // PATCH /tables/123/
+		r.Delete("/", h.deleteTable) // DELETE /tables/123/
+	})
+	return r
+}
+
 // CreateTableRequest представляет тело запроса на создание столика в ресторане.
 type CreateTableRequest struct {
 	SeatsNumber int `json:"seats_number"`

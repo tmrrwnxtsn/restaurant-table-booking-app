@@ -3,17 +3,21 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store"
 	"time"
 )
 
 const (
-	bookingTable        = "bookings"
+	// bookingTable представляет название таблицы в БД, содержащей информацию о бронях.
+	bookingTable = "bookings"
+	// bookingsTablesTable представляет название таблицы в БД, содержащей информацию о связях между бронями и столиками ресторанов.
 	bookingsTablesTable = "bookings_tables"
 )
 
 var _ store.BookingRepository = (*BookingRepository)(nil)
 
+// BookingRepository представляет реализацю store.BookingRepository.
 type BookingRepository struct {
 	store *Store
 }
@@ -66,4 +70,37 @@ func (r *BookingRepository) Create(clientName, clientPhone string, bookedDate, b
 	}
 
 	return bookingID, nil
+}
+
+func (r *BookingRepository) GetAll(restaurantID uint64) ([]model.Booking, error) {
+	getAllBookingsQuery := fmt.Sprintf(
+		"SELECT DISTINCT b.* "+
+			"FROM %s b "+
+			"JOIN bookings_tables bt on b.id = bt.booking_id "+
+			"JOIN tables t on t.id = bt.table_id "+
+			"WHERE restaurant_id = $1",
+		bookingTable,
+	)
+
+	rows, err := r.store.db.Query(getAllBookingsQuery, restaurantID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var bookings []model.Booking
+
+	for rows.Next() {
+		var booking model.Booking
+		if err = rows.Scan(
+			&booking.ID, &booking.ClientName, &booking.ClientPhone, &booking.BookedDate, &booking.BookedTimeFrom, &booking.BookedTimeTo,
+		); err != nil {
+			return bookings, err
+		}
+		bookings = append(bookings, booking)
+	}
+	if err = rows.Err(); err != nil {
+		return bookings, err
+	}
+	return bookings, nil
 }

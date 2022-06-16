@@ -14,6 +14,8 @@ import (
 type BookingService interface {
 	// Create создаёт бронь в ресторане на выбранные дату, время и количество человек.
 	Create(details model.BookingDetails) (uint64, error)
+	// GetAll возвращает список всех броней ресторана.
+	GetAll(restaurantID uint64) ([]model.Booking, error)
 }
 
 // BookingServiceImpl представляет реализацию BookingService.
@@ -77,4 +79,8 @@ func (s *BookingServiceImpl) Create(details model.BookingDetails) (uint64, error
 	}
 
 	return s.bookingRepo.Create(details.ClientName, details.ClientPhone, dateTime, dateTime, bookedTables...)
+}
+
+func (s *BookingServiceImpl) GetAll(restaurantID uint64) ([]model.Booking, error) {
+	return s.bookingRepo.GetAll(restaurantID)
 }

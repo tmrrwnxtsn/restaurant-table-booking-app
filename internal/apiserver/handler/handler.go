@@ -49,27 +49,9 @@ func (h *Handler) InitRoutes() *chi.Mux {
 
 	r.Route("/api/v1", func(r chi.Router) {
 		// маршруты для манипуляции ресторанами
-		r.Route("/restaurants", func(r chi.Router) {
-			r.Post("/", h.createRestaurant) // POST /api/v1/restaurants/
-			r.Get("/", h.listRestaurants)   // GET /api/v1/restaurants/
-			r.Route("/{restaurant_id}", func(r chi.Router) {
-				r.Use(h.restaurantCtx)            // загрузить информацию о ресторане из контекста запроса
-				r.Get("/", h.getRestaurant)       // GET /api/v1/restaurants/123/
-				r.Patch("/", h.updateRestaurant)  // PATCH /api/v1/restaurants/123/
-				r.Delete("/", h.deleteRestaurant) // DELETE /api/v1/restaurants/123/
-				r.Route("/tables", func(r chi.Router) { // работа со столиками ресторанов
-					r.Post("/", h.createTable) // POST /api/v1/restaurants/123/tables
-					r.Get("/", h.listTables)   // GET /api/v1/restaurants/123/tables
-				})
-			})
-		})
+		r.Mount("/restaurants", h.initRestaurantsRouter())
 		// маршруты для манипуляции столиками ресторанов
-		r.Route("/tables/{table_id}", func(r chi.Router) {
-			r.Use(h.tableCtx)            // загрузить информацию о столике из контекста запроса
-			r.Get("/", h.getTable)       // GET /api/v1/tables/123/
-			r.Patch("/", h.updateTable)  // PATCH /api/v1/tables/123/
-			r.Delete("/", h.deleteTable) // DELETE /api/v1/tables/123/
-		})
+		r.Mount("/tables", h.initTablesRouter())
 	})
 
 	return r

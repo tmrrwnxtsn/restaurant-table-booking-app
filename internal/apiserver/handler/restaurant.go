@@ -13,6 +13,28 @@ import (
 
 const restaurantCtxKey = "restaurant"
 
+// initRestaurantsRouter подготавливает отдельный маршрутизатор для манипуляции ресторанами.
+func (h *Handler) initRestaurantsRouter() chi.Router {
+	r := chi.NewRouter()
+	r.Post("/", h.createRestaurant) // POST /restaurants/
+	r.Get("/", h.listRestaurants)   // GET /restaurants/
+	r.Route("/{restaurant_id}", func(r chi.Router) {
+		r.Use(h.restaurantCtx)            // загрузить информацию о ресторане из контекста запроса
+		r.Get("/", h.getRestaurant)       // GET /restaurants/123/
+		r.Patch("/", h.updateRestaurant)  // PATCH /restaurants/123/
+		r.Delete("/", h.deleteRestaurant) // DELETE /restaurants/123/
+		r.Route("/tables", func(r chi.Router) { // работа со столиками ресторанов
+			r.Post("/", h.createTable) // POST /restaurants/123/tables
+			r.Get("/", h.listTables)   // GET /restaurants/123/tables
+		})
+		r.Route("/bookings", func(r chi.Router) { // работа со бронями ресторанов
+			r.Post("/", h.createBooking) // POST /restaurants/123/bookings
+			r.Get("/", h.listBookings)   // GET /restaurants/123/bookings
+		})
+	})
+	return r
+}
+
 // CreateRestaurantRequest представляет тело запроса на создание ресторана.
 type CreateRestaurantRequest struct {
 	Name               string  `json:"name"`

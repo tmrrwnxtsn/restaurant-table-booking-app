@@ -13,6 +13,7 @@ const restaurantTable = "restaurants"
 
 var _ store.RestaurantRepository = (*RestaurantRepository)(nil)
 
+// RestaurantRepository представляет реализацю store.RestaurantRepository.
 type RestaurantRepository struct {
 	store *Store
 }

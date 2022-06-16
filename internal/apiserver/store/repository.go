@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// RestaurantRepository представляет таблицу с информацией о ресторанах.
+// RestaurantRepository представляет методы работы с информацией о ресторанах.
 type RestaurantRepository interface {
 	// Create создаёт новую запись о ресторане.
 	Create(name string, averageWaitingTime int, averageCheck float64) (uint64, error)
@@ -22,7 +22,7 @@ type RestaurantRepository interface {
 	Delete(id uint64) error
 }
 
-// TableRepository представляет таблицу с информацией о столиках в ресторанах.
+// TableRepository представляет методы работы с информацией о столиках в ресторанах.
 type TableRepository interface {
 	// Create создаёт новую запись о столике в ресторане.
 	Create(restaurantID uint64, seatsNumber int) (uint64, error)
@@ -39,8 +39,10 @@ type TableRepository interface {
 	Delete(id uint64) error
 }
 
-// BookingRepository представляет таблицу с информацией о совершённых клиентами бронях.
+// BookingRepository представляет методы работы с информацией о совершённых клиентами бронях.
 type BookingRepository interface {
 	// Create создаёт новую запись о брони и связывает созданную бронь со столиками, которые бронируются в рамках неё.
 	Create(clientName, clientPhone string, bookedDate, bookedTimeFrom time.Time, tableIDs ...uint64) (uint64, error)
+	// GetAll возвращает список всех броней ресторана.
+	GetAll(restaurantID uint64) ([]model.Booking, error)
 }

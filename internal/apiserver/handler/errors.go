@@ -7,10 +7,12 @@ import (
 )
 
 var (
-	// ErrRestaurantMissingFields возникает, когда в запросе на создание ресторана пропущены обязательные поля.
+	// ErrRestaurantMissingFields возникает, когда в запросе на создание/получение ресторана пропущены обязательные поля.
 	ErrRestaurantMissingFields = errors.New("missing required restaurant fields")
-	// ErrTableMissingFields возникает, когда в запросе на создание столика в ресторане пропущены обязательные поля.
+	// ErrTableMissingFields возникает, когда в запросе на создание/получение столика в ресторане пропущены обязательные поля.
 	ErrTableMissingFields = errors.New("missing required restaurant table fields")
+	// ErrBookingMissingFields возникает, когда в запросе на создание/получение брони пропущены обязательные поля.
+	ErrBookingMissingFields = errors.New("missing required booking fields")
 	// ErrFindAvailableRestaurants возникает, когда в запросе на поиск доступных ресторанов пропущено либо кол-во человек,
 	// либо дата и время.
 	ErrFindAvailableRestaurants = errors.New("missing required datetime or people number")
@@ -53,17 +55,6 @@ func ErrNotFound(err error) render.Renderer {
 		Err:            err,
 		HTTPStatusCode: http.StatusNotFound,
 		StatusText:     "resource not found",
-		ErrorText:      err.Error(),
-	}
-}
-
-// ErrUnsupportedMediaType вкладывает ошибку в кастомную структуру ErrResponse с кодом состояния http.StatusUnsupportedMediaType.
-// Создаётся при получении данных некорректного содержания.
-func ErrUnsupportedMediaType(err error) render.Renderer {
-	return &ErrResponse{
-		Err:            err,
-		HTTPStatusCode: http.StatusUnsupportedMediaType,
-		StatusText:     "wrong data format type",
 		ErrorText:      err.Error(),
 	}
 }

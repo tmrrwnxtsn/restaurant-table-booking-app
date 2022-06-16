@@ -13,6 +13,7 @@ const tableTable = "tables"
 
 var _ store.TableRepository = (*TableRepository)(nil)
 
+// TableRepository представляет реализацю store.TableRepository.
 type TableRepository struct {
 	store *Store
 }
@@ -140,7 +141,7 @@ func (r *TableRepository) Delete(id uint64) error {
 	// мы не можем удалить столик из ресторана, если видим, что клиенты в будущем придут и сядут за него,
 	// поэтому сначала смотрим, есть ли в будущем или сегодня брони с этим столиком
 	countBookingsWithThisTableQuery := fmt.Sprintf(
-		"SELECT COUNT(*) " +
+		"SELECT COUNT(*) "+
 			"FROM %s "+
 			"JOIN %s bt on tables.id = bt.table_id "+
 			"JOIN %s b on b.id = bt.booking_id "+
