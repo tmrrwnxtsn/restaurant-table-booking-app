@@ -35,70 +35,86 @@ func (h *Handler) initRestaurantsRouter() chi.Router {
 	return r
 }
 
-// CreateRestaurantRequest представляет тело запроса на создание ресторана.
-type CreateRestaurantRequest struct {
-	Name               string  `json:"name"`
-	AverageWaitingTime int     `json:"average_waiting_time,string"`
-	AverageCheck       float64 `json:"average_check,string"`
+// createRestaurantRequest представляет тело запроса на создание ресторана.
+type createRestaurantRequest struct {
+	Name               string  `json:"name" example:"Каравелла"`
+	AverageWaitingTime int     `json:"average_waiting_time,string" example:"60"`
+	AverageCheck       float64 `json:"average_check,string" example:"2500.00"`
 }
 
-// Bind осуществляет пост-обработку запроса CreateRestaurantRequest.
-func (r *CreateRestaurantRequest) Bind(_ *http.Request) error {
+// Bind осуществляет пост-обработку запроса.
+func (r *createRestaurantRequest) Bind(_ *http.Request) error {
 	if r.Name == "" || r.AverageWaitingTime == 0 || r.AverageCheck == 0.0 {
 		return ErrRestaurantMissingFields
 	}
 	return nil
 }
 
-// CreateRestaurantResponse представляет тело ответа на создание ресторана.
-type CreateRestaurantResponse struct {
-	ID uint64 `json:"id"`
+// createRestaurantResponse представляет тело ответа на создание ресторана.
+type createRestaurantResponse struct {
+	ID uint64 `json:"id" example:"1"`
 }
 
-// Render осуществляет предобработку ответа CreateRestaurantResponse.
-func (r *CreateRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+// Render осуществляет предобработку ответа.
+func (r *createRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
-// createRestaurant принимает запросы на создание ресторана.
+// createRestaurant godoc
+// @Summary  Создать ресторан
+// @Tags     restaurants
+// @Accept   json
+// @Produce  json
+// @Param    input  body      createRestaurantRequest   true  "Информация о ресторане"
+// @Success  201    {object}  createRestaurantResponse  "ok"
+// @Failure  400    {object}  errResponse               "Некорректные данные ресторана"
+// @Failure  500    {object}  errResponse               "Ошибка на стороне сервера"
+// @Router   /restaurants/ [post]
 func (h *Handler) createRestaurant(w http.ResponseWriter, r *http.Request) {
-	data := &CreateRestaurantRequest{}
+	data := &createRestaurantRequest{}
 	if err := render.Bind(r, data); err != nil {
-		_ = render.Render(w, r, ErrInvalidRequest(err))
+		_ = render.Render(w, r, errInvalidRequest(err))
 		return
 	}
 
 	restaurantID, err := h.service.RestaurantService.Create(data.Name, data.AverageWaitingTime, data.AverageCheck)
 	if err != nil {
-		_ = render.Render(w, r, ErrServiceFailure(err))
+		_ = render.Render(w, r, errServiceFailure(err))
 		return
 	}
 
 	render.Status(r, http.StatusCreated)
-	_ = render.Render(w, r, &CreateRestaurantResponse{
+	_ = render.Render(w, r, &createRestaurantResponse{
 		ID: restaurantID,
 	})
 }
 
-// ListRestaurantsResponse представляет тело ответа на получение списка ресторанов.
-type ListRestaurantsResponse struct {
+// listRestaurantsResponse представляет тело ответа на получение списка ресторанов.
+type listRestaurantsResponse struct {
 	Data []model.Restaurant `json:"data"`
 }
 
-// Render осуществляет предобработку ответа ListRestaurantsResponse.
-func (r *ListRestaurantsResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+// Render осуществляет предобработку ответа.
+func (r *listRestaurantsResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
-// listRestaurants принимает запросы на получение списка ресторанов.
+// listRestaurants godoc
+// @Summary  Получить список всех ресторанов
+// @Tags     restaurants
+// @Accept   json
+// @Produce  json
+// @Success  200  {object}  listRestaurantsResponse  "ok"
+// @Failure  500  {object}  errResponse              "Ошибка на стороне сервера"
+// @Router   /restaurants/ [get]
 func (h *Handler) listRestaurants(w http.ResponseWriter, r *http.Request) {
 	restaurants, err := h.service.RestaurantService.GetAll()
 	if err != nil {
-		_ = render.Render(w, r, ErrServiceFailure(err))
+		_ = render.Render(w, r, errServiceFailure(err))
 		return
 	}
 
-	_ = render.Render(w, r, &ListRestaurantsResponse{
+	_ = render.Render(w, r, &listRestaurantsResponse{
 		Data: restaurants,
 	})
 }
@@ -110,95 +126,125 @@ func (h *Handler) restaurantCtx(next http.Handler) http.Handler {
 		if restaurantIDStr := chi.URLParam(r, "restaurant_id"); restaurantIDStr != "" {
 			restaurantID, err := strconv.ParseUint(restaurantIDStr, 10, 0)
 			if err != nil {
-				_ = render.Render(w, r, ErrInvalidRequest(err))
+				_ = render.Render(w, r, errInvalidRequest(err))
 				return
 			}
 
 			restaurant, err := h.service.RestaurantService.Get(restaurantID)
 			if err != nil {
 				if errors.Is(err, store.ErrRestaurantNotFound) {
-					_ = render.Render(w, r, ErrNotFound(err))
+					_ = render.Render(w, r, errNotFound(err))
 					return
 				}
-				_ = render.Render(w, r, ErrServiceFailure(err))
+				_ = render.Render(w, r, errServiceFailure(err))
 				return
 			}
 
 			ctx := context.WithValue(r.Context(), restaurantCtxKey, restaurant)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		} else {
-			_ = render.Render(w, r, ErrInvalidRequest(ErrRestaurantMissingFields))
+			_ = render.Render(w, r, errInvalidRequest(ErrRestaurantMissingFields))
 			return
 		}
 	})
 }
 
-// GetRestaurantResponse представляет тело ответа на получение ресторана.
-type GetRestaurantResponse struct {
+// getRestaurantResponse представляет тело ответа на получение ресторана.
+type getRestaurantResponse struct {
 	*model.Restaurant
 }
 
-// Render осуществляет предобработку ответа GetRestaurantResponse.
-func (r *GetRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+// Render осуществляет предобработку ответа.
+func (r *getRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
-// getRestaurant принимает запросы на получение ресторана.
+// getRestaurant godoc
+// @Summary  Получить ресторан по его ID
+// @Tags     restaurants
+// @Accept   json
+// @Produce  json
+// @Param    restaurant_id  path      string                 true  "ID ресторана"
+// @Success  200            {object}  getRestaurantResponse  "ok"
+// @Failure  400            {object}  errResponse            "Некорректный ID ресторана"
+// @Failure  500            {object}  errResponse            "Ошибка на стороне сервера"
+// @Router   /restaurants/{restaurant_id}/ [get]
 func (h *Handler) getRestaurant(w http.ResponseWriter, r *http.Request) {
 	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
 
-	if err := render.Render(w, r, &GetRestaurantResponse{restaurant}); err != nil {
-		_ = render.Render(w, r, ErrRender(err))
+	if err := render.Render(w, r, &getRestaurantResponse{restaurant}); err != nil {
+		_ = render.Render(w, r, errRender(err))
 		return
 	}
 }
 
-// UpdateRestaurantResponse представляет тело ответа на получение ресторана.
-type UpdateRestaurantResponse struct {
-	Status string `json:"status"`
+// updateRestaurantResponse представляет тело ответа на получение ресторана.
+type updateRestaurantResponse struct {
+	Status string `json:"status" example:"ok"`
 }
 
-// Render осуществляет предобработку ответа UpdateRestaurantResponse.
-func (r *UpdateRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+// Render осуществляет предобработку ответа.
+func (r *updateRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
-// updateRestaurant принимает запросы на обновление информации о ресторане.
+// updateRestaurant godoc
+// @Summary      Обновить информацию о ресторане по его ID
+// @Description  Обновление происходит именно путём PATCH-запросов, чтобы была возможность изменять данные частично.
+// @Tags     	 restaurants
+// @Accept   	 json
+// @Produce  	 json
+// @Param        restaurant_id  path      string                      true  "ID ресторана"
+// @Param        input          body      model.UpdateRestaurantData  true  "Информация о ресторане"
+// @Success      200            {object}  updateRestaurantResponse    "ok"
+// @Failure      400            {object}  errResponse                 "Некорректный данные запроса"
+// @Failure      500            {object}  errResponse                 "Ошибка на стороне сервера"
+// @Router       /restaurants/{restaurant_id}/ [patch]
 func (h *Handler) updateRestaurant(w http.ResponseWriter, r *http.Request) {
 	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
 
 	data := model.UpdateRestaurantData{}
 	if err := render.Bind(r, &data); err != nil {
-		_ = render.Render(w, r, ErrInvalidRequest(err))
+		_ = render.Render(w, r, errInvalidRequest(err))
 		return
 	}
 
 	if err := h.service.RestaurantService.Update(restaurant.ID, data); err != nil {
-		_ = render.Render(w, r, ErrServiceFailure(err))
+		_ = render.Render(w, r, errServiceFailure(err))
 		return
 	}
 
-	_ = render.Render(w, r, &UpdateRestaurantResponse{Status: "ok"})
+	_ = render.Render(w, r, &updateRestaurantResponse{Status: "ok"})
 }
 
-// DeleteRestaurantResponse представляет тело ответа на удаление ресторана.
-type DeleteRestaurantResponse struct {
-	Status string `json:"status"`
+// deleteRestaurantResponse представляет тело ответа на удаление ресторана.
+type deleteRestaurantResponse struct {
+	Status string `json:"status" example:"ok"`
 }
 
-// Render осуществляет предобработку ответа DeleteRestaurantResponse.
-func (r *DeleteRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+// Render осуществляет предобработку ответа.
+func (r *deleteRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
-// deleteRestaurant принимает запросы на удаление ресторана.
+// deleteRestaurant godoc
+// @Summary      Удаляет ресторан по его ID
+// @Description  Если ресторан ожидает гостей (есть брони в будущем/сегодняшнем днях в этом ресторане), то его нельзя удалить.
+// @Tags     	 restaurants
+// @Accept   	 json
+// @Produce  	 json
+// @Param        restaurant_id  path      string                    true  "ID ресторана"
+// @Success      200            {object}  deleteRestaurantResponse  "ok"
+// @Failure      400            {object}  errResponse               "Некорректный данные запроса"
+// @Failure      500            {object}  errResponse               "Ошибка на стороне сервера"
+// @Router       /restaurants/{restaurant_id}/ [delete]
 func (h *Handler) deleteRestaurant(w http.ResponseWriter, r *http.Request) {
 	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
 
 	if err := h.service.RestaurantService.Delete(restaurant.ID); err != nil {
-		_ = render.Render(w, r, ErrServiceFailure(err))
+		_ = render.Render(w, r, errServiceFailure(err))
 		return
 	}
 
-	_ = render.Render(w, r, &DeleteRestaurantResponse{Status: "ok"})
+	_ = render.Render(w, r, &deleteRestaurantResponse{Status: "ok"})
 }

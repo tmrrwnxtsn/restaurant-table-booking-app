@@ -21,26 +21,26 @@ var (
 	ErrMakingBookingContentType = errors.New("booking data with wrong content type")
 )
 
-// ErrResponse представляет ответ с ошибкой.
-type ErrResponse struct {
-	Err            error `json:"-"`
-	HTTPStatusCode int   `json:"-"`
+// errResponse представляет ответ с ошибкой.
+type errResponse struct {
+	Err     error `json:"-"`
+	AppCode int64 `json:"-"`
 
-	StatusText string `json:"status"`
-	AppCode    int64  `json:"code,omitempty"`
-	ErrorText  string `json:"error,omitempty"`
+	HTTPStatusCode int    `json:"code,omitempty" example:"400"`
+	StatusText     string `json:"status" example:"invalid request"`
+	ErrorText      string `json:"error,omitempty" example:"missing required fields"`
 }
 
-// Render осуществляет предобработку ответа ErrResponse.
-func (e *ErrResponse) Render(_ http.ResponseWriter, r *http.Request) error {
+// Render осуществляет предобработку ответа errResponse.
+func (e *errResponse) Render(_ http.ResponseWriter, r *http.Request) error {
 	render.Status(r, e.HTTPStatusCode)
 	return nil
 }
 
-// ErrInvalidRequest вкладывает ошибку в кастомную структуру ErrResponse с кодом состояния http.StatusBadRequest.
+// errInvalidRequest вкладывает ошибку в кастомную структуру errResponse с кодом состояния http.StatusBadRequest.
 // Создаётся при некорректном запросе.
-func ErrInvalidRequest(err error) render.Renderer {
-	return &ErrResponse{
+func errInvalidRequest(err error) render.Renderer {
+	return &errResponse{
 		Err:            err,
 		HTTPStatusCode: http.StatusBadRequest,
 		StatusText:     "invalid request",
@@ -48,10 +48,10 @@ func ErrInvalidRequest(err error) render.Renderer {
 	}
 }
 
-// ErrNotFound вкладывает ошибку в кастомную структуру ErrResponse с кодом состояния http.StatusNotFound.
+// errNotFound вкладывает ошибку в кастомную структуру errResponse с кодом состояния http.StatusNotFound.
 // Создаётся при отсутствии искомого ресурса по указанному URL.
-func ErrNotFound(err error) render.Renderer {
-	return &ErrResponse{
+func errNotFound(err error) render.Renderer {
+	return &errResponse{
 		Err:            err,
 		HTTPStatusCode: http.StatusNotFound,
 		StatusText:     "resource not found",
@@ -59,10 +59,10 @@ func ErrNotFound(err error) render.Renderer {
 	}
 }
 
-// ErrRender вкладывает ошибку в кастомную структуру ErrResponse с кодом состояния http.StatusUnprocessableEntity.
+// errRender вкладывает ошибку в кастомную структуру errResponse с кодом состояния http.StatusUnprocessableEntity.
 // Создаётся при возникновении ошибки обработки ответа.
-func ErrRender(err error) render.Renderer {
-	return &ErrResponse{
+func errRender(err error) render.Renderer {
+	return &errResponse{
 		Err:            err,
 		HTTPStatusCode: http.StatusUnprocessableEntity,
 		StatusText:     "error rendering response",
@@ -70,10 +70,10 @@ func ErrRender(err error) render.Renderer {
 	}
 }
 
-// ErrServiceFailure вкладывает ошибку в кастомную структуру ErrResponse с кодом состояния http.StatusInternalServerError.
+// errServiceFailure вкладывает ошибку в кастомную структуру errResponse с кодом состояния http.StatusInternalServerError.
 // Создаётся при возникновении ошибки на стороне сервера.
-func ErrServiceFailure(err error) render.Renderer {
-	return &ErrResponse{
+func errServiceFailure(err error) render.Renderer {
+	return &errResponse{
 		Err:            err,
 		HTTPStatusCode: http.StatusInternalServerError,
 		StatusText:     "service failure",

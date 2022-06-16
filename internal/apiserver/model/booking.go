@@ -7,17 +7,17 @@ import (
 
 // Booking представляет бронь.
 type Booking struct {
-	ID uint64 `json:"id"`
+	ID uint64 `json:"id" example:"3"`
 	// ClientName представляет имя клиента, оформляющего бронь.
-	ClientName string `json:"client_name"`
+	ClientName string `json:"client_name" example:"Павел"`
 	// ClientPhone представляет телефон клиента, оформляющего бронь.
-	ClientPhone string `json:"client_phone"`
+	ClientPhone string `json:"client_phone" example:"89485722648"`
 	// BookedDate представляет дату посещения ресторана в рамках брони.
-	BookedDate ShortFormattedDate `json:"booked_date"`
+	BookedDate ShortFormattedDate `json:"booked_date" example:"2022.06.16"`
 	// BookedTimeFrom представляет время начала брони.
-	BookedTimeFrom ShortFormattedTime `json:"booked_time_from"`
+	BookedTimeFrom ShortFormattedTime `json:"booked_time_from" example:"14:30"`
 	// BookedTimeTo представляет время конца брони.
-	BookedTimeTo ShortFormattedTime `json:"booked_time_to"`
+	BookedTimeTo ShortFormattedTime `json:"booked_time_to" example:"16:30"`
 }
 
 // ShortFormattedTime представляет время в формате "15:04".

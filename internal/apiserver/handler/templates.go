@@ -127,7 +127,7 @@ func (h *Handler) makeBooking(w http.ResponseWriter, r *http.Request) {
 // renderTemplate обрабатывает шаблон страницы с переданными в него данными.
 func renderTemplate(w http.ResponseWriter, r *http.Request, name string, data interface{}) {
 	if err := tmpls.ExecuteTemplate(w, name, data); err != nil {
-		_ = render.Render(w, r, ErrServiceFailure(err))
+		_ = render.Render(w, r, errServiceFailure(err))
 		return
 	}
 }

@@ -18,6 +18,17 @@ import (
 
 var flagConfig = flag.String("config", "./configs/default.yml", "path to config file")
 
+// @title           Aero Table Booking API
+// @version         1.0
+// @description     API сервиса бронирования столиков в ресторанах
+// @termsOfService  http://swagger.io/terms/
+
+// @license.name  The MIT License (MIT)
+// @license.url   https://mit-license.org/
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
 func main() {
 	flag.Parse()
 

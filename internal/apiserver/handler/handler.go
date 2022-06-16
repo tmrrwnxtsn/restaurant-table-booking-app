@@ -4,6 +4,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/sirupsen/logrus"
+	"github.com/swaggo/http-swagger"
+	_ "github.com/tmrrwnxtsn/aero-table-booking-api/docs"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/service"
 	"github.com/tmrrwnxtsn/aero-table-booking-api/pkg/logging"
 	"net/http"
@@ -53,6 +55,9 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		// маршруты для манипуляции столиками ресторанов
 		r.Mount("/tables", h.initTablesRouter())
 	})
+
+	// swagger-документация
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	return r
 }
