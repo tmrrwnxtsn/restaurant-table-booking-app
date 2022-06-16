@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-var flagConfig = flag.String("config", "./configs/default.yml", "path to config file")
+var flagConfig = flag.String("config", "./configs/local.yml", "path to config file")
 
 // @title           Aero Table Booking API
 // @version         1.0
