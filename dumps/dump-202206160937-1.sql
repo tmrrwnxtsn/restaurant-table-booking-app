@@ -445,10 +445,7 @@ ALTER TABLE ONLY public.tables ALTER COLUMN id SET DEFAULT nextval('public.table
 --
 
 COPY public.bookings (id, client_name, client_phone, booked_date, booked_time_from, booked_time_to) FROM stdin;
-2	Павел	89279880072	2022-06-16	12:31:00	14:31:00
-3	Павел	89279880072	2022-06-16	12:32:00	14:32:00
-4	Павел	89279880072	2022-06-16	12:37:00	14:37:00
-5	Павло	89278779942	2022-06-16	17:03:00	19:03:00
+1	Павел	89278575533	2022-06-17	15:33:00	17:33:00
 \.
 
 
@@ -457,13 +454,7 @@ COPY public.bookings (id, client_name, client_phone, booked_date, booked_time_fr
 --
 
 COPY public.bookings_tables (id, booking_id, table_id) FROM stdin;
-2	3	16
-3	4	10
-4	4	8
-5	4	7
-6	4	2
-7	5	10
-8	5	8
+1	1	13
 \.
 
 
@@ -472,9 +463,9 @@ COPY public.bookings_tables (id, booking_id, table_id) FROM stdin;
 --
 
 COPY public.restaurants (id, name, average_waiting_time, average_check) FROM stdin;
+1	Каравелла	30	2000.0000
 2	Молодость	15	1000.0000
 3	Мясо и Салат	60	1500.0000
-1	Маравелла	30	2000.0000
 \.
 
 
@@ -492,6 +483,7 @@ COPY public.schema_migrations (version, dirty) FROM stdin;
 --
 
 COPY public.tables (id, restaurant_id, seats_number) FROM stdin;
+1	1	4
 2	1	4
 3	1	4
 4	1	4
@@ -499,6 +491,7 @@ COPY public.tables (id, restaurant_id, seats_number) FROM stdin;
 6	1	4
 7	1	3
 8	1	3
+9	1	2
 10	1	2
 11	2	3
 12	2	3
@@ -509,8 +502,6 @@ COPY public.tables (id, restaurant_id, seats_number) FROM stdin;
 17	3	3
 18	3	3
 19	3	3
-20	1	5
-1	1	55
 \.
 
 
@@ -518,14 +509,14 @@ COPY public.tables (id, restaurant_id, seats_number) FROM stdin;
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.bookings_id_seq', 5, true);
+SELECT pg_catalog.setval('public.bookings_id_seq', 1, true);
 
 
 --
 -- Name: bookings_tables_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.bookings_tables_id_seq', 8, true);
+SELECT pg_catalog.setval('public.bookings_tables_id_seq', 1, true);
 
 
 --
@@ -539,7 +530,7 @@ SELECT pg_catalog.setval('public.restaurants_id_seq', 3, true);
 -- Name: tables_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.tables_id_seq', 20, true);
+SELECT pg_catalog.setval('public.tables_id_seq', 19, true);
 
 
 --

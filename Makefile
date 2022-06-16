@@ -40,4 +40,8 @@ swag-fmt: ## форматирование комментариев swag
 compose-up: ## собирает образы API и БД при необходимости и запускает контейнеры (API сервер и Postgres БД)
 	docker-compose up
 
+.PHONY: dump
+dump: ## делает дамп текущего состояния БД
+	pg_dump -U postgres -W -E UTF8 -d aero -f dump.sql
+
 .DEFAULT_GOAL := run
