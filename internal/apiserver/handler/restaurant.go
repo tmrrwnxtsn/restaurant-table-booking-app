@@ -13,30 +13,6 @@ import (
 
 const restaurantCtxKey = "restaurant"
 
-// ListRestaurantsResponse представляет тело ответа на получение списка всех ресторанов.
-type ListRestaurantsResponse struct {
-	Data []model.Restaurant `json:"data"`
-}
-
-// Render осуществляет предобработку ответа ListRestaurantsResponse.
-func (r *ListRestaurantsResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
-	return nil
-}
-
-// listRestaurants принимает запросы на получение списка ресторанов.
-func (h *Handler) listRestaurants(w http.ResponseWriter, r *http.Request) {
-	restaurants, err := h.service.RestaurantService.GetAll()
-	if err != nil {
-		_ = render.Render(w, r, ErrServiceFailure(err))
-		return
-	}
-
-	render.Status(r, http.StatusOK)
-	_ = render.Render(w, r, &ListRestaurantsResponse{
-		Data: restaurants,
-	})
-}
-
 // CreateRestaurantRequest представляет тело запроса на создание ресторана.
 type CreateRestaurantRequest struct {
 	Name               string  `json:"name"`
@@ -82,7 +58,30 @@ func (h *Handler) createRestaurant(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// restaurantCtx используется для загрузки ресторана (model.Restaurant) по restaurantID,
+// ListRestaurantsResponse представляет тело ответа на получение списка ресторанов.
+type ListRestaurantsResponse struct {
+	Data []model.Restaurant `json:"data"`
+}
+
+// Render осуществляет предобработку ответа ListRestaurantsResponse.
+func (r *ListRestaurantsResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+	return nil
+}
+
+// listRestaurants принимает запросы на получение списка ресторанов.
+func (h *Handler) listRestaurants(w http.ResponseWriter, r *http.Request) {
+	restaurants, err := h.service.RestaurantService.GetAll()
+	if err != nil {
+		_ = render.Render(w, r, ErrServiceFailure(err))
+		return
+	}
+
+	_ = render.Render(w, r, &ListRestaurantsResponse{
+		Data: restaurants,
+	})
+}
+
+// restaurantCtx используется для загрузки ресторана (model.Restaurant) из контекста запроса по restaurant_id,
 // переданному в параметрах URL запроса.
 func (h *Handler) restaurantCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -93,7 +92,7 @@ func (h *Handler) restaurantCtx(next http.Handler) http.Handler {
 				return
 			}
 
-			restaurant, err := h.service.RestaurantService.GetByID(restaurantID)
+			restaurant, err := h.service.RestaurantService.Get(restaurantID)
 			if err != nil {
 				if errors.Is(err, store.ErrRestaurantNotFound) {
 					_ = render.Render(w, r, ErrNotFound(err))
@@ -170,7 +169,7 @@ func (r *DeleteRestaurantResponse) Render(_ http.ResponseWriter, _ *http.Request
 	return nil
 }
 
-// deleteRestaurant на удаление ресторана.
+// deleteRestaurant принимает запросы на удаление ресторана.
 func (h *Handler) deleteRestaurant(w http.ResponseWriter, r *http.Request) {
 	restaurant := r.Context().Value(restaurantCtxKey).(*model.Restaurant)
 

@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// restaurantTable представляет название таблицы в БД, содержащей информацию о ресторанах.
 const restaurantTable = "restaurants"
 
 var _ store.RestaurantRepository = (*RestaurantRepository)(nil)
@@ -100,15 +101,15 @@ func (r *RestaurantRepository) GetAllAvailable(desiredDate, desiredTime string, 
 	return restaurants, nil
 }
 
-func (r *RestaurantRepository) GetByID(id uint64) (*model.Restaurant, error) {
-	getRestaurantByIDQuery := fmt.Sprintf(
+func (r *RestaurantRepository) Get(id uint64) (*model.Restaurant, error) {
+	getRestaurantQuery := fmt.Sprintf(
 		"SELECT * FROM %s WHERE id = $1",
 		restaurantTable,
 	)
 
 	restaurant := &model.Restaurant{}
 	if err := r.store.db.QueryRow(
-		getRestaurantByIDQuery, id,
+		getRestaurantQuery, id,
 	).Scan(&restaurant.ID, &restaurant.Name, &restaurant.AverageWaitingTime, &restaurant.AverageCheck); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, store.ErrRestaurantNotFound
@@ -154,11 +155,35 @@ func (r *RestaurantRepository) Update(id uint64, data model.UpdateRestaurantData
 }
 
 func (r *RestaurantRepository) Delete(id uint64) error {
+	// мы не можем удалить ресторан, если видим по оформленным броням, что клиенты посетят этот ресторан (сегодня или в будущем)
+	// поэтому сначала смотрим, есть ли в будущем (или сегодня) брони в этом ресторане
+	countBookingsWithThisRestaurantQuery := fmt.Sprintf(
+		"SELECT COUNT(*) "+
+			"FROM %s "+
+			"JOIN %s bt on tables.id = bt.table_id "+
+			"JOIN %s b on b.id = bt.booking_id "+
+			"WHERE booked_date >= current_date AND restaurant_id = $1",
+		tableTable, bookingsTablesTable, bookingTable,
+	)
+	var bookingsWithThisRestaurant int
+	err := r.store.db.QueryRow(
+		countBookingsWithThisRestaurantQuery, id,
+	).Scan(&bookingsWithThisRestaurant)
+	if err != nil {
+		return err
+	}
+
+	// если нашлись брони в этом ресторане в будущем (или на сегодняшний день)
+	if bookingsWithThisRestaurant > 0 {
+		return fmt.Errorf("delete restaurant: %w", store.ErrRestaurantIsBooked)
+	}
+
+	// если все брони, которые связаны с этим рестораном, были в прошлом,
+	// и в будущем (или на сегодняшний день) не ожидается клиентов, то его можно удалить
 	deleteRestaurantQuery := fmt.Sprintf(
 		"DELETE FROM %s WHERE id = $1",
 		restaurantTable,
 	)
-
-	_, err := r.store.db.Exec(deleteRestaurantQuery, id)
+	_, err = r.store.db.Exec(deleteRestaurantQuery, id)
 	return err
 }

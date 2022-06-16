@@ -16,8 +16,8 @@ type RestaurantService interface {
 	GetAll() ([]model.Restaurant, error)
 	// GetAllAvailable возвращает список ресторанов, в которых можно забронировать столики.
 	GetAllAvailable(desiredDateTime, peopleNumber string) ([]model.Restaurant, error)
-	// GetByID получает ресторан по его ID.
-	GetByID(id uint64) (*model.Restaurant, error)
+	// Get получает ресторан по его ID.
+	Get(id uint64) (*model.Restaurant, error)
 	// Update обновляет информацию о ресторане по его ID.
 	Update(id uint64, data model.UpdateRestaurantData) error
 	// Delete удаляет ресторан по его ID.
@@ -74,8 +74,8 @@ func (s *RestaurantServiceImpl) GetAllAvailable(desiredDateTime, peopleNumber st
 	return s.restaurantRepo.GetAllAvailable(desiredDate, desiredTime, peopleNum)
 }
 
-func (s *RestaurantServiceImpl) GetByID(id uint64) (*model.Restaurant, error) {
-	return s.restaurantRepo.GetByID(id)
+func (s *RestaurantServiceImpl) Get(id uint64) (*model.Restaurant, error) {
+	return s.restaurantRepo.Get(id)
 }
 
 func (s *RestaurantServiceImpl) Update(id uint64, data model.UpdateRestaurantData) error {

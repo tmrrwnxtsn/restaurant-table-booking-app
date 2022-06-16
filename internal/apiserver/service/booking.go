@@ -30,7 +30,7 @@ func (s *BookingServiceImpl) Create(details model.BookingDetails) (uint64, error
 	desiredDateTime := strings.Split(details.DesiredDatetime, " ")
 
 	// получаем доступные для брони столики в выбранном ресторане
-	tables, err := s.tableRepo.GetAllAvailableByRestaurant(details.RestaurantID, desiredDateTime[0], desiredDateTime[1])
+	tables, err := s.tableRepo.GetAllAvailable(details.RestaurantID, desiredDateTime[0], desiredDateTime[1])
 	if err != nil {
 		return 0, err
 	}

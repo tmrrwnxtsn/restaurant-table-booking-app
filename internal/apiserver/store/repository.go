@@ -14,8 +14,8 @@ type RestaurantRepository interface {
 	// GetAllAvailable возвращает список ресторанов, в которых можно забронировать столики на выбранные дату,
 	// время и количество человек. Принимает desiredDate в формате "2006.01.02" и desiredTime - "15:04".
 	GetAllAvailable(desiredDate, desiredTime string, peopleNumber int) ([]model.Restaurant, error)
-	// GetByID возвращает ресторан по его ID.
-	GetByID(id uint64) (*model.Restaurant, error)
+	// Get возвращает ресторан по его ID.
+	Get(id uint64) (*model.Restaurant, error)
 	// Update обновляет информацию о ресторане по его ID.
 	Update(id uint64, data model.UpdateRestaurantData) error
 	// Delete удаляет запись о ресторане по его ID.
@@ -24,9 +24,19 @@ type RestaurantRepository interface {
 
 // TableRepository представляет таблицу с информацией о столиках в ресторанах.
 type TableRepository interface {
-	// GetAllAvailableByRestaurant возвращает список всех столиков, доступных для бронирования, в конкретном ресторане.
+	// Create создаёт новую запись о столике в ресторане.
+	Create(restaurantID uint64, seatsNumber int) (uint64, error)
+	// GetAllAvailable возвращает список всех столиков, доступных для бронирования, в конкретном ресторане.
 	// Принимает desiredDate в формате "2006.01.02" и desiredTime - "15:04".
-	GetAllAvailableByRestaurant(restaurantID uint64, desiredDate, desiredTime string) ([]model.Table, error)
+	GetAllAvailable(restaurantID uint64, desiredDate, desiredTime string) ([]model.Table, error)
+	// GetAll возвращает список всех столиков ресторана.
+	GetAll(restaurantID uint64) ([]model.Table, error)
+	// Get возвращает столик ресторана по его ID.
+	Get(id uint64) (*model.Table, error)
+	// Update обновляет информацию о столике ресторана по его ID.
+	Update(id uint64, data model.UpdateTableData) error
+	// Delete удаляет столик из ресторана по его ID, ЕСЛИ ОН НЕ ЗАБРОНИРОВАН НА БУДУЩЕЕ ВРЕМЯ.
+	Delete(id uint64) error
 }
 
 // BookingRepository представляет таблицу с информацией о совершённых клиентами бронях.

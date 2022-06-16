@@ -9,6 +9,8 @@ import (
 var (
 	// ErrRestaurantMissingFields возникает, когда в запросе на создание ресторана пропущены обязательные поля.
 	ErrRestaurantMissingFields = errors.New("missing required restaurant fields")
+	// ErrTableMissingFields возникает, когда в запросе на создание столика в ресторане пропущены обязательные поля.
+	ErrTableMissingFields = errors.New("missing required restaurant table fields")
 	// ErrFindAvailableRestaurants возникает, когда в запросе на поиск доступных ресторанов пропущено либо кол-во человек,
 	// либо дата и время.
 	ErrFindAvailableRestaurants = errors.New("missing required datetime or people number")
