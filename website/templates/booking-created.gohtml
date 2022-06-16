@@ -1,0 +1,21 @@
+{{define "booking-created"}}
+    <!DOCTYPE html>
+    <html lang="ru">
+    {{template "metadata" .}}
+    <body>
+    <section class="py-1 text-center container vh-100 d-flex align-items-center">
+        <div class="row py-lg-3">
+            <div class="col-lg-7 col-md-7 mx-auto">
+                <h1 class="fw-normal">Бронь успешно оформлена!</h1>
+                <p class="lead text-muted p-3">Номер брони – {{.BookingID}}. Назовите его при входе в ресторан.
+                    Приятного времяпрепровождения!</p>
+            </div>
+            {{template "back-to-home"}}
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    </body>
+    </html>
+{{end}}

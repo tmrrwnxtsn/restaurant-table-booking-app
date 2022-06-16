@@ -1,0 +1,82 @@
+{{define "restaurants"}}
+    <!DOCTYPE html>
+    <html lang="ru">
+    {{template "metadata" .}}
+    <body>
+    <section class="py-1 text-center container">
+        <div class="row py-lg-3">
+            <div class="col-lg-7 col-md-7 mx-auto">
+                <h1 class="fw-normal">Выбор ресторана</h1>
+            </div>
+        </div>
+    </section>
+    <div class="py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {{ if .Restaurants}} {{range .Restaurants}}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{.Name}}</h5>
+                                <p class="card-text">Среднее время ожидания блюда: {{.AverageWaitingTime}}
+                                    мин.</p>
+                                <p class="card-text mt-3">Средний чек: {{.AverageCheck}} руб.</p>
+                                <p class="card-text">Количество свободных
+                                    мест: {{.AvailableSeatsNumber}}</p>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#makeBooking" onclick="openModal({{.ID}}, {{.Name}})">
+                                    Забронировать места
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {{end}} {{else}}
+                    <p class="lead text-muted p-3">Извините, не нашлось подходящих ресторанов.</p>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    {{template "back-to-home"}}
+    <div class="modal fade" id="makeBooking" tabindex="-1" aria-labelledby="makeBookingLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="makeBookingForm" action="" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="makeBookingLabel"></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <p></p>
+                            <p></p>
+                            <label for="client_name" class="form-label">Ваше имя</label>
+                            <input type="text" name="client_name" class="form-control"
+                                   id="client_name" placeholder="Введите Ваше имя"
+                                   required>
+                            <label for="client_phone" class="form-label">Ваш номер
+                                телефона</label>
+                            <input type="text" name="client_phone" class="form-control"
+                                   id="client_phone"
+                                   placeholder="Введите Ваш номер телефона"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">
+                            Отмена
+                        </button>
+                        <button type="submit" class="btn btn-success">Подтвердить</button>
+                        <input type="hidden" id="people_number_input" name="people_number" value="">
+                        <input type="hidden" id="desired_datetime_input" name="desired_datetime" value="">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/static/js/openModal.js"></script>
+    </body>
+    </html>
+{{end}}

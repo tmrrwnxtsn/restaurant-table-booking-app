@@ -28,4 +28,16 @@ testdata: ## заполнить БД тестовыми данными
 	echo "Filling database with test data..."
 	psql -a -f ./testdata/testdata.sql "$(APP_DSN)"
 
+.PHONY: swag-init
+swag-init: ## парсинг комментариев у методов и генерация Swagger-документации
+	swag init -g cmd/apiserver/main.go
+
+.PHONY: swag-fmt
+swag-fmt: ## форматирование комментариев swag
+	swag fmt -g cmd/apiserver/main.go
+
+.PHONY: compose-up
+compose-up: ## собирает образы API и БД при необходимости и запускает контейнеры (API сервер и Postgres БД)
+	docker-compose up
+
 .DEFAULT_GOAL := run
