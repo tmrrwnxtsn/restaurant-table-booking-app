@@ -54,10 +54,12 @@
                                    required>
                             <label for="client_phone" class="form-label">Ваш номер
                                 телефона</label>
-                            <input type="text" name="client_phone" class="form-control"
+                            <input type="tel" name="client_phone" class="form-control"
                                    id="client_phone"
                                    placeholder="Введите Ваш номер телефона"
-                                   required>
+                                   required
+                                   pattern="^8[0-9]{10}$"
+                                   title="Используйте формат: 89279007265">
                         </div>
                     </div>
                     <div class="modal-footer">
