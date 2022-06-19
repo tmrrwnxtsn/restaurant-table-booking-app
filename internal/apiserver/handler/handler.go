@@ -59,5 +59,8 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	// swagger-документация
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
+	// профилирование
+	r.Mount("/debug", h.initProfilerRouter())
+
 	return r
 }

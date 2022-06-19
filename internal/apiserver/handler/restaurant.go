@@ -14,7 +14,7 @@ import (
 const restaurantCtxKey = "restaurant"
 
 // initRestaurantsRouter подготавливает отдельный маршрутизатор для манипуляции ресторанами.
-func (h *Handler) initRestaurantsRouter() chi.Router {
+func (h *Handler) initRestaurantsRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Post("/", h.createRestaurant) // POST /restaurants/
 	r.Get("/", h.listRestaurants)   // GET /restaurants/

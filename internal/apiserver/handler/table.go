@@ -14,7 +14,7 @@ import (
 const tableCtxKey = "table"
 
 // initTablesRouter подготавливает отдельный маршрутизатор для манипуляции столиками в ресторанах.
-func (h *Handler) initTablesRouter() chi.Router {
+func (h *Handler) initTablesRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Route("/{table_id}", func(r chi.Router) {
 		r.Use(h.tableCtx)            // загрузить информацию о столике из контекста запроса
