@@ -6,6 +6,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 const envVarsPrefix = "API_"
@@ -34,7 +35,13 @@ func Load(ymlConfigPath string) (*Config, error) {
 	cfg := Config{}
 
 	// загрузка конфигурационных значений из yml-файла
-	bytes, err := ioutil.ReadFile(ymlConfigPath)
+	cfgFile, err := os.Open(ymlConfigPath)
+	if err != nil {
+		return nil, err
+	}
+	defer cfgFile.Close()
+
+	bytes, err := ioutil.ReadAll(cfgFile)
 	if err != nil {
 		return nil, err
 	}
