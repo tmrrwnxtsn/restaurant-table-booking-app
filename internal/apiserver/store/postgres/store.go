@@ -2,7 +2,8 @@ package postgres
 
 import (
 	"database/sql"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/store"
 )
 
 var _ store.Store = (*Store)(nil)

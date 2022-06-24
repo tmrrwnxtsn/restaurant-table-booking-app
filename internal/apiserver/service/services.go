@@ -1,6 +1,6 @@
 package service
 
-import "github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store"
+import "github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/store"
 
 // Services представляет слой бизнес-логики.
 type Services struct {

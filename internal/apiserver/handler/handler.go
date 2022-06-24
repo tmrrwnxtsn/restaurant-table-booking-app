@@ -1,15 +1,17 @@
 package handler
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/sirupsen/logrus"
 	"github.com/swaggo/http-swagger"
-	_ "github.com/tmrrwnxtsn/aero-table-booking-api/docs"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/service"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/pkg/logging"
-	"net/http"
-	"time"
+
+	_ "github.com/tmrrwnxtsn/restaurant-table-booking-app/docs"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/service"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/pkg/logging"
 )
 
 // Handler представляет маршрутизатор.

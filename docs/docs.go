@@ -875,7 +875,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Aero Table Booking API",
+	Title:            "Restaurant Table Booking API",
 	Description:      "API сервиса бронирования столиков в ресторанах",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

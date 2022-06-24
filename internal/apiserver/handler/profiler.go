@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"net/http/pprof"
+
+	"github.com/go-chi/chi/v5"
 )
 
 // initProfilerRouter подготавливает отдельный маршрутизатор для профилирования работы API сервера.

@@ -2,11 +2,13 @@ package handler
 
 import (
 	"errors"
-	"github.com/go-chi/render"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/service"
 	"html/template"
 	"net/http"
+
+	"github.com/go-chi/render"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/model"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/service"
 )
 
 const templatesPattern = "website/templates/*.gohtml"

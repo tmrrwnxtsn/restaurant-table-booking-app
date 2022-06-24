@@ -229,21 +229,21 @@ definitions:
     type: object
 host: localhost:8080
 info:
-  contact: {}
+  contact: { }
   description: API сервиса бронирования столиков в ресторанах
   license:
     name: The MIT License (MIT)
     url: https://mit-license.org/
   termsOfService: http://swagger.io/terms/
-  title: Aero Table Booking API
+  title: Restaurant Table Booking API
   version: "1.0"
 paths:
   /restaurants/:
     get:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -255,19 +255,19 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Получить список всех ресторанов
       tags:
-      - restaurants
+        - restaurants
     post:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: Информация о ресторане
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/handler.createRestaurantRequest'
+        - description: Информация о ресторане
+          in: body
+          name: input
+          required: true
+          schema:
+            $ref: '#/definitions/handler.createRestaurantRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "201":
           description: ok
@@ -283,21 +283,21 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Создать ресторан
       tags:
-      - restaurants
+        - restaurants
   /restaurants/{restaurant_id}/:
     delete:
       consumes:
-      - application/json
+        - application/json
       description: Если ресторан ожидает гостей (есть брони в будущем/сегодняшнем
         днях в этом ресторане), то его нельзя удалить.
       parameters:
-      - description: ID ресторана
-        in: path
-        name: restaurant_id
-        required: true
-        type: string
+        - description: ID ресторана
+          in: path
+          name: restaurant_id
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -313,18 +313,18 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Удаляет ресторан по его ID
       tags:
-      - restaurants
+        - restaurants
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID ресторана
-        in: path
-        name: restaurant_id
-        required: true
-        type: string
+        - description: ID ресторана
+          in: path
+          name: restaurant_id
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -340,26 +340,26 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Получить ресторан по его ID
       tags:
-      - restaurants
+        - restaurants
     patch:
       consumes:
-      - application/json
+        - application/json
       description: Обновление происходит именно путём PATCH-запросов, чтобы была возможность
         изменять данные частично.
       parameters:
-      - description: ID ресторана
-        in: path
-        name: restaurant_id
-        required: true
-        type: string
-      - description: Информация о ресторане
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/model.UpdateRestaurantData'
+        - description: ID ресторана
+          in: path
+          name: restaurant_id
+          required: true
+          type: string
+        - description: Информация о ресторане
+          in: body
+          name: input
+          required: true
+          schema:
+            $ref: '#/definitions/model.UpdateRestaurantData'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -375,19 +375,19 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Обновить информацию о ресторане по его ID
       tags:
-      - restaurants
+        - restaurants
   /restaurants/{restaurant_id}/bookings/:
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID ресторана
-        in: path
-        name: restaurant_id
-        required: true
-        type: string
+        - description: ID ресторана
+          in: path
+          name: restaurant_id
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -403,24 +403,24 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Получить список всех броней, совершённых в ресторане
       tags:
-      - bookings
+        - bookings
     post:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID ресторана
-        in: path
-        name: restaurant_id
-        required: true
-        type: string
-      - description: Информация о брони
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/handler.createBookingRequest'
+        - description: ID ресторана
+          in: path
+          name: restaurant_id
+          required: true
+          type: string
+        - description: Информация о брони
+          in: body
+          name: input
+          required: true
+          schema:
+            $ref: '#/definitions/handler.createBookingRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "201":
           description: ok
@@ -436,19 +436,19 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Оформить бронь в выбранном ресторане
       tags:
-      - bookings
+        - bookings
   /restaurants/{restaurant_id}/tables/:
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID ресторана
-        in: path
-        name: restaurant_id
-        required: true
-        type: string
+        - description: ID ресторана
+          in: path
+          name: restaurant_id
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -464,24 +464,24 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Получить список столиков в ресторане
       tags:
-      - tables
+        - tables
     post:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID ресторана
-        in: path
-        name: restaurant_id
-        required: true
-        type: string
-      - description: Информация о столике
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/handler.createTableRequest'
+        - description: ID ресторана
+          in: path
+          name: restaurant_id
+          required: true
+          type: string
+        - description: Информация о столике
+          in: body
+          name: input
+          required: true
+          schema:
+            $ref: '#/definitions/handler.createTableRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "201":
           description: ok
@@ -497,21 +497,21 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Создать столик в ресторане
       tags:
-      - tables
+        - tables
   /tables/{table_id}/:
     delete:
       consumes:
-      - application/json
+        - application/json
       description: Если за столиком ещё будут сидеть клиенты (есть брони в будущем/сегодняшнем
         днях в этом ресторане), то его нельзя удалить.
       parameters:
-      - description: ID столика
-        in: path
-        name: table_id
-        required: true
-        type: string
+        - description: ID столика
+          in: path
+          name: table_id
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -527,18 +527,18 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Удаляет столик по его ID
       tags:
-      - tables
+        - tables
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID столика
-        in: path
-        name: table_id
-        required: true
-        type: string
+        - description: ID столика
+          in: path
+          name: table_id
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -554,26 +554,26 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Получить столик по его ID
       tags:
-      - tables
+        - tables
     patch:
       consumes:
-      - application/json
+        - application/json
       description: Обновление происходит именно путём PATCH-запросов, чтобы была возможность
         изменять данные частично.
       parameters:
-      - description: ID столика
-        in: path
-        name: table_id
-        required: true
-        type: string
-      - description: Информация о столике
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/model.UpdateTableData'
+        - description: ID столика
+          in: path
+          name: table_id
+          required: true
+          type: string
+        - description: Информация о столике
+          in: body
+          name: input
+          required: true
+          schema:
+            $ref: '#/definitions/model.UpdateTableData'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: ok
@@ -589,5 +589,5 @@ paths:
             $ref: '#/definitions/handler.errResponse'
       summary: Обновить информацию о столике по его ID
       tags:
-      - tables
+        - tables
 swagger: "2.0"

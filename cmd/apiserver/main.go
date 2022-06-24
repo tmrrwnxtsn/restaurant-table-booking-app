@@ -3,22 +3,24 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/sirupsen/logrus"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/config"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/handler"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/server"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/service"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store/postgres"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/sirupsen/logrus"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/config"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/handler"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/server"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/service"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/store/postgres"
 )
 
 var flagConfig = flag.String("config", "./configs/local.yml", "path to config file")
 
-// @title           Aero Table Booking API
+// @title           Restaurant Table Booking API
 // @version         1.0
 // @description     API сервиса бронирования столиков в ресторанах
 // @termsOfService  http://swagger.io/terms/

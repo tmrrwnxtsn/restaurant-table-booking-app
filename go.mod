@@ -1,4 +1,4 @@
-module github.com/tmrrwnxtsn/aero-table-booking-api
+module github.com/tmrrwnxtsn/restaurant-table-booking-app
 
 go 1.17
 

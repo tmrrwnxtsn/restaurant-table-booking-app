@@ -1,12 +1,13 @@
 package config
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/qiangxue/go-env"
-	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
 	"os"
+
+	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/qiangxue/go-env"
+	"gopkg.in/yaml.v3"
 )
 
 const envVarsPrefix = "API_"

@@ -3,12 +3,14 @@ package handler
 import (
 	"context"
 	"errors"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/render"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store"
 	"net/http"
 	"strconv"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/render"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/model"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/store"
 )
 
 const restaurantCtxKey = "restaurant"

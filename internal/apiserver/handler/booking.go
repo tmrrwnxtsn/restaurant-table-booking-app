@@ -1,10 +1,12 @@
 package handler
 
 import (
-	"github.com/go-chi/render"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
 	"net/http"
 	"strconv"
+
+	"github.com/go-chi/render"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/model"
 )
 
 // createBookingRequest представляет тело запроса на создание брони в ресторане.

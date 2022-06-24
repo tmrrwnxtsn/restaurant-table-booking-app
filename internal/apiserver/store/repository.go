@@ -1,8 +1,9 @@
 package store
 
 import (
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
 	"time"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/model"
 )
 
 // RestaurantRepository представляет методы работы с информацией о ресторанах.

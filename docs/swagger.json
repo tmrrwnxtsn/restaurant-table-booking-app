@@ -1,863 +1,863 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "description": "API сервиса бронирования столиков в ресторанах",
-        "title": "Aero Table Booking API",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {},
-        "license": {
-            "name": "The MIT License (MIT)",
-            "url": "https://mit-license.org/"
-        },
-        "version": "1.0"
+  "swagger": "2.0",
+  "info": {
+    "description": "API сервиса бронирования столиков в ресторанах",
+    "title": "Restaurant Table Booking API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {},
+    "license": {
+      "name": "The MIT License (MIT)",
+      "url": "https://mit-license.org/"
     },
-    "host": "localhost:8080",
-    "basePath": "/api/v1",
-    "paths": {
-        "/restaurants/": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "restaurants"
-                ],
-                "summary": "Получить список всех ресторанов",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.listRestaurantsResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "restaurants"
-                ],
-                "summary": "Создать ресторан",
-                "parameters": [
-                    {
-                        "description": "Информация о ресторане",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/handler.createRestaurantRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.createRestaurantResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректные данные ресторана",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
+    "version": "1.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/api/v1",
+  "paths": {
+    "/restaurants/": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "restaurants"
+        ],
+        "summary": "Получить список всех ресторанов",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.listRestaurantsResponse"
             }
-        },
-        "/restaurants/{restaurant_id}/": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "restaurants"
-                ],
-                "summary": "Получить ресторан по его ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID ресторана",
-                        "name": "restaurant_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.getRestaurantResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный ID ресторана",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Если ресторан ожидает гостей (есть брони в будущем/сегодняшнем днях в этом ресторане), то его нельзя удалить.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "restaurants"
-                ],
-                "summary": "Удаляет ресторан по его ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID ресторана",
-                        "name": "restaurant_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.deleteRestaurantResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный данные запроса",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "Обновление происходит именно путём PATCH-запросов, чтобы была возможность изменять данные частично.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "restaurants"
-                ],
-                "summary": "Обновить информацию о ресторане по его ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID ресторана",
-                        "name": "restaurant_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Информация о ресторане",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.UpdateRestaurantData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.updateRestaurantResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный данные запроса",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
             }
-        },
-        "/restaurants/{restaurant_id}/bookings/": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "bookings"
-                ],
-                "summary": "Получить список всех броней, совершённых в ресторане",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID ресторана",
-                        "name": "restaurant_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.listBookingsResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный restaurant_id",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "bookings"
-                ],
-                "summary": "Оформить бронь в выбранном ресторане",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID ресторана",
-                        "name": "restaurant_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Информация о брони",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/handler.createBookingRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.createBookingResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректные данные брони",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/restaurants/{restaurant_id}/tables/": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tables"
-                ],
-                "summary": "Получить список столиков в ресторане",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID ресторана",
-                        "name": "restaurant_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.listTablesResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный restaurant_id",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tables"
-                ],
-                "summary": "Создать столик в ресторане",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID ресторана",
-                        "name": "restaurant_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Информация о столике",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/handler.createTableRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.createTableResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректные данные столика",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/tables/{table_id}/": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tables"
-                ],
-                "summary": "Получить столик по его ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID столика",
-                        "name": "table_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.getTableResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный ID столика",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Если за столиком ещё будут сидеть клиенты (есть брони в будущем/сегодняшнем днях в этом ресторане), то его нельзя удалить.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tables"
-                ],
-                "summary": "Удаляет столик по его ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID столика",
-                        "name": "table_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.deleteTableResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный данные запроса",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "Обновление происходит именно путём PATCH-запросов, чтобы была возможность изменять данные частично.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tables"
-                ],
-                "summary": "Обновить информацию о столике по его ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID столика",
-                        "name": "table_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Информация о столике",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.UpdateTableData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/handler.updateTableResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный данные запроса",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка на стороне сервера",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errResponse"
-                        }
-                    }
-                }
-            }
+          }
         }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "restaurants"
+        ],
+        "summary": "Создать ресторан",
+        "parameters": [
+          {
+            "description": "Информация о ресторане",
+            "name": "input",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/handler.createRestaurantRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.createRestaurantResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректные данные ресторана",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      }
     },
-    "definitions": {
-        "handler.createBookingRequest": {
-            "type": "object",
-            "properties": {
-                "client_name": {
-                    "description": "ClientName имя клиента, оформляющего бронь.",
-                    "type": "string",
-                    "example": "Павел"
-                },
-                "client_phone": {
-                    "description": "ClientPhone телефон клиента, оформляющего бронь.",
-                    "type": "string",
-                    "example": "89876545654"
-                },
-                "desired_datetime": {
-                    "description": "DesiredDatetime представляет дату и время посещения ресторана в рамках брони",
-                    "type": "string",
-                    "example": "2022.06.16 17:03"
-                },
-                "people_number": {
-                    "type": "integer",
-                    "example": 3
-                }
+    "/restaurants/{restaurant_id}/": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "restaurants"
+        ],
+        "summary": "Получить ресторан по его ID",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID ресторана",
+            "name": "restaurant_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.getRestaurantResponse"
             }
-        },
-        "handler.createBookingResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                }
+          },
+          "400": {
+            "description": "Некорректный ID ресторана",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
             }
-        },
-        "handler.createRestaurantRequest": {
-            "type": "object",
-            "properties": {
-                "average_check": {
-                    "type": "string",
-                    "example": "2500.00"
-                },
-                "average_waiting_time": {
-                    "type": "string",
-                    "example": "60"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Каравелла"
-                }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
             }
-        },
-        "handler.createRestaurantResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                }
-            }
-        },
-        "handler.createTableRequest": {
-            "type": "object",
-            "properties": {
-                "seats_number": {
-                    "type": "integer",
-                    "example": 3
-                }
-            }
-        },
-        "handler.createTableResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 2
-                }
-            }
-        },
-        "handler.deleteRestaurantResponse": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string",
-                    "example": "ok"
-                }
-            }
-        },
-        "handler.deleteTableResponse": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "handler.errResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 400
-                },
-                "error": {
-                    "type": "string",
-                    "example": "missing required fields"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "invalid request"
-                }
-            }
-        },
-        "handler.getRestaurantResponse": {
-            "type": "object",
-            "properties": {
-                "available_seats_number": {
-                    "description": "AvailableSeatsNumber представляет актуальное количество свободных мест.",
-                    "type": "integer",
-                    "example": 24
-                },
-                "average_check": {
-                    "description": "AverageCheck представляет средний чек на блюдо в ресторане.",
-                    "type": "number",
-                    "example": 2500
-                },
-                "average_waiting_time": {
-                    "description": "AverageWaitingTime представляет среднее время ожидания заказа в минутах.",
-                    "type": "integer",
-                    "example": 60
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 3
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Каравелла"
-                }
-            }
-        },
-        "handler.getTableResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 3
-                },
-                "restaurant_id": {
-                    "type": "integer",
-                    "example": 2
-                },
-                "seats_number": {
-                    "description": "SeatsNumber представляет вместимость столика.",
-                    "type": "integer",
-                    "example": 4
-                }
-            }
-        },
-        "handler.listBookingsResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Booking"
-                    }
-                }
-            }
-        },
-        "handler.listRestaurantsResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Restaurant"
-                    }
-                }
-            }
-        },
-        "handler.listTablesResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Table"
-                    }
-                }
-            }
-        },
-        "handler.updateRestaurantResponse": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string",
-                    "example": "ok"
-                }
-            }
-        },
-        "handler.updateTableResponse": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string",
-                    "example": "ok"
-                }
-            }
-        },
-        "model.Booking": {
-            "type": "object",
-            "properties": {
-                "booked_date": {
-                    "description": "BookedDate представляет дату посещения ресторана в рамках брони.",
-                    "type": "string",
-                    "example": "2022.06.16"
-                },
-                "booked_time_from": {
-                    "description": "BookedTimeFrom представляет время начала брони.",
-                    "type": "string",
-                    "example": "14:30"
-                },
-                "booked_time_to": {
-                    "description": "BookedTimeTo представляет время конца брони.",
-                    "type": "string",
-                    "example": "16:30"
-                },
-                "client_name": {
-                    "description": "ClientName представляет имя клиента, оформляющего бронь.",
-                    "type": "string",
-                    "example": "Павел"
-                },
-                "client_phone": {
-                    "description": "ClientPhone представляет телефон клиента, оформляющего бронь.",
-                    "type": "string",
-                    "example": "89485722648"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 3
-                }
-            }
-        },
-        "model.Restaurant": {
-            "type": "object",
-            "properties": {
-                "available_seats_number": {
-                    "description": "AvailableSeatsNumber представляет актуальное количество свободных мест.",
-                    "type": "integer",
-                    "example": 24
-                },
-                "average_check": {
-                    "description": "AverageCheck представляет средний чек на блюдо в ресторане.",
-                    "type": "number",
-                    "example": 2500
-                },
-                "average_waiting_time": {
-                    "description": "AverageWaitingTime представляет среднее время ожидания заказа в минутах.",
-                    "type": "integer",
-                    "example": 60
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 3
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Каравелла"
-                }
-            }
-        },
-        "model.Table": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 3
-                },
-                "restaurant_id": {
-                    "type": "integer",
-                    "example": 2
-                },
-                "seats_number": {
-                    "description": "SeatsNumber представляет вместимость столика.",
-                    "type": "integer",
-                    "example": 4
-                }
-            }
-        },
-        "model.UpdateRestaurantData": {
-            "type": "object",
-            "properties": {
-                "average_check": {
-                    "type": "string",
-                    "example": "2500.00"
-                },
-                "average_waiting_time": {
-                    "type": "string",
-                    "example": "60"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Каравелла"
-                }
-            }
-        },
-        "model.UpdateTableData": {
-            "type": "object",
-            "properties": {
-                "seats_number": {
-                    "type": "integer",
-                    "example": 4
-                }
-            }
+          }
         }
+      },
+      "delete": {
+        "description": "Если ресторан ожидает гостей (есть брони в будущем/сегодняшнем днях в этом ресторане), то его нельзя удалить.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "restaurants"
+        ],
+        "summary": "Удаляет ресторан по его ID",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID ресторана",
+            "name": "restaurant_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.deleteRestaurantResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректный данные запроса",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Обновление происходит именно путём PATCH-запросов, чтобы была возможность изменять данные частично.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "restaurants"
+        ],
+        "summary": "Обновить информацию о ресторане по его ID",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID ресторана",
+            "name": "restaurant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Информация о ресторане",
+            "name": "input",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/model.UpdateRestaurantData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.updateRestaurantResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректный данные запроса",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      }
+    },
+    "/restaurants/{restaurant_id}/bookings/": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bookings"
+        ],
+        "summary": "Получить список всех броней, совершённых в ресторане",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID ресторана",
+            "name": "restaurant_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.listBookingsResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректный restaurant_id",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bookings"
+        ],
+        "summary": "Оформить бронь в выбранном ресторане",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID ресторана",
+            "name": "restaurant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Информация о брони",
+            "name": "input",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/handler.createBookingRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.createBookingResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректные данные брони",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      }
+    },
+    "/restaurants/{restaurant_id}/tables/": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "tables"
+        ],
+        "summary": "Получить список столиков в ресторане",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID ресторана",
+            "name": "restaurant_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.listTablesResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректный restaurant_id",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "tables"
+        ],
+        "summary": "Создать столик в ресторане",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID ресторана",
+            "name": "restaurant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Информация о столике",
+            "name": "input",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/handler.createTableRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.createTableResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректные данные столика",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      }
+    },
+    "/tables/{table_id}/": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "tables"
+        ],
+        "summary": "Получить столик по его ID",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID столика",
+            "name": "table_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.getTableResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректный ID столика",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Если за столиком ещё будут сидеть клиенты (есть брони в будущем/сегодняшнем днях в этом ресторане), то его нельзя удалить.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "tables"
+        ],
+        "summary": "Удаляет столик по его ID",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID столика",
+            "name": "table_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.deleteTableResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректный данные запроса",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Обновление происходит именно путём PATCH-запросов, чтобы была возможность изменять данные частично.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "tables"
+        ],
+        "summary": "Обновить информацию о столике по его ID",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID столика",
+            "name": "table_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Информация о столике",
+            "name": "input",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/model.UpdateTableData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/handler.updateTableResponse"
+            }
+          },
+          "400": {
+            "description": "Некорректный данные запроса",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          },
+          "500": {
+            "description": "Ошибка на стороне сервера",
+            "schema": {
+              "$ref": "#/definitions/handler.errResponse"
+            }
+          }
+        }
+      }
     }
+  },
+  "definitions": {
+    "handler.createBookingRequest": {
+      "type": "object",
+      "properties": {
+        "client_name": {
+          "description": "ClientName имя клиента, оформляющего бронь.",
+          "type": "string",
+          "example": "Павел"
+        },
+        "client_phone": {
+          "description": "ClientPhone телефон клиента, оформляющего бронь.",
+          "type": "string",
+          "example": "89876545654"
+        },
+        "desired_datetime": {
+          "description": "DesiredDatetime представляет дату и время посещения ресторана в рамках брони",
+          "type": "string",
+          "example": "2022.06.16 17:03"
+        },
+        "people_number": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "handler.createBookingResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "handler.createRestaurantRequest": {
+      "type": "object",
+      "properties": {
+        "average_check": {
+          "type": "string",
+          "example": "2500.00"
+        },
+        "average_waiting_time": {
+          "type": "string",
+          "example": "60"
+        },
+        "name": {
+          "type": "string",
+          "example": "Каравелла"
+        }
+      }
+    },
+    "handler.createRestaurantResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "handler.createTableRequest": {
+      "type": "object",
+      "properties": {
+        "seats_number": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "handler.createTableResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    },
+    "handler.deleteRestaurantResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "ok"
+        }
+      }
+    },
+    "handler.deleteTableResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "handler.errResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 400
+        },
+        "error": {
+          "type": "string",
+          "example": "missing required fields"
+        },
+        "status": {
+          "type": "string",
+          "example": "invalid request"
+        }
+      }
+    },
+    "handler.getRestaurantResponse": {
+      "type": "object",
+      "properties": {
+        "available_seats_number": {
+          "description": "AvailableSeatsNumber представляет актуальное количество свободных мест.",
+          "type": "integer",
+          "example": 24
+        },
+        "average_check": {
+          "description": "AverageCheck представляет средний чек на блюдо в ресторане.",
+          "type": "number",
+          "example": 2500
+        },
+        "average_waiting_time": {
+          "description": "AverageWaitingTime представляет среднее время ожидания заказа в минутах.",
+          "type": "integer",
+          "example": 60
+        },
+        "id": {
+          "type": "integer",
+          "example": 3
+        },
+        "name": {
+          "type": "string",
+          "example": "Каравелла"
+        }
+      }
+    },
+    "handler.getTableResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 3
+        },
+        "restaurant_id": {
+          "type": "integer",
+          "example": 2
+        },
+        "seats_number": {
+          "description": "SeatsNumber представляет вместимость столика.",
+          "type": "integer",
+          "example": 4
+        }
+      }
+    },
+    "handler.listBookingsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/model.Booking"
+          }
+        }
+      }
+    },
+    "handler.listRestaurantsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/model.Restaurant"
+          }
+        }
+      }
+    },
+    "handler.listTablesResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/model.Table"
+          }
+        }
+      }
+    },
+    "handler.updateRestaurantResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "ok"
+        }
+      }
+    },
+    "handler.updateTableResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "ok"
+        }
+      }
+    },
+    "model.Booking": {
+      "type": "object",
+      "properties": {
+        "booked_date": {
+          "description": "BookedDate представляет дату посещения ресторана в рамках брони.",
+          "type": "string",
+          "example": "2022.06.16"
+        },
+        "booked_time_from": {
+          "description": "BookedTimeFrom представляет время начала брони.",
+          "type": "string",
+          "example": "14:30"
+        },
+        "booked_time_to": {
+          "description": "BookedTimeTo представляет время конца брони.",
+          "type": "string",
+          "example": "16:30"
+        },
+        "client_name": {
+          "description": "ClientName представляет имя клиента, оформляющего бронь.",
+          "type": "string",
+          "example": "Павел"
+        },
+        "client_phone": {
+          "description": "ClientPhone представляет телефон клиента, оформляющего бронь.",
+          "type": "string",
+          "example": "89485722648"
+        },
+        "id": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "model.Restaurant": {
+      "type": "object",
+      "properties": {
+        "available_seats_number": {
+          "description": "AvailableSeatsNumber представляет актуальное количество свободных мест.",
+          "type": "integer",
+          "example": 24
+        },
+        "average_check": {
+          "description": "AverageCheck представляет средний чек на блюдо в ресторане.",
+          "type": "number",
+          "example": 2500
+        },
+        "average_waiting_time": {
+          "description": "AverageWaitingTime представляет среднее время ожидания заказа в минутах.",
+          "type": "integer",
+          "example": 60
+        },
+        "id": {
+          "type": "integer",
+          "example": 3
+        },
+        "name": {
+          "type": "string",
+          "example": "Каравелла"
+        }
+      }
+    },
+    "model.Table": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 3
+        },
+        "restaurant_id": {
+          "type": "integer",
+          "example": 2
+        },
+        "seats_number": {
+          "description": "SeatsNumber представляет вместимость столика.",
+          "type": "integer",
+          "example": 4
+        }
+      }
+    },
+    "model.UpdateRestaurantData": {
+      "type": "object",
+      "properties": {
+        "average_check": {
+          "type": "string",
+          "example": "2500.00"
+        },
+        "average_waiting_time": {
+          "type": "string",
+          "example": "60"
+        },
+        "name": {
+          "type": "string",
+          "example": "Каравелла"
+        }
+      }
+    },
+    "model.UpdateTableData": {
+      "type": "object",
+      "properties": {
+        "seats_number": {
+          "type": "integer",
+          "example": 4
+        }
+      }
+    }
+  }
 }

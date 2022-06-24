@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/model"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/store"
 )
 
 // TableService представляет бизнес-логику работы со столиками.

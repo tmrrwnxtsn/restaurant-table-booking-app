@@ -2,10 +2,11 @@ package service
 
 import (
 	"fmt"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store"
 	"strconv"
 	"time"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/model"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/store"
 )
 
 // RestaurantService представляет бизнес-логику работы с ресторанами.

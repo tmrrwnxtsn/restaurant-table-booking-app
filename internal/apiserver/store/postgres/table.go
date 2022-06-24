@@ -3,9 +3,10 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/model"
-	"github.com/tmrrwnxtsn/aero-table-booking-api/internal/apiserver/store"
 	"strings"
+
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/model"
+	"github.com/tmrrwnxtsn/restaurant-table-booking-app/internal/apiserver/store"
 )
 
 // tableTable представляет название таблицы в БД, содержащей записи о столиках в ресторанах.

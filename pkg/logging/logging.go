@@ -4,10 +4,11 @@ package logging
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
+
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/sirupsen/logrus"
 )
 
 // StructuredLogger представляет реализацию кастомного структурированного логгера сервиса.
