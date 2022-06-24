@@ -93,8 +93,8 @@
 После установки необходимого ПО необходимо скачать исходный код сервиса и перейти в директорию с исходным кодом:
 
 ```shell
-git clone https://github.com/tmrrwnxtsn/aero-table-booking-api.git
-cd aero-table-booking-api
+git clone https://github.com/tmrrwnxtsn/restaurant-table-booking-app.git
+cd restaurant-table-booking-app
 ```
 
 Автоматизация запуска системы осуществляется
